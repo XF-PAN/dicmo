@@ -4,7 +4,6 @@
     email <- read.dcf(file = system.file("DESCRIPTION", package = pkgname),
                         fields = "Maintainer")
     packageStartupMessage(paste(pkgname, version),
-                          " is still BETA sofrware.")
-    packageStartupMessage("Please report any bugs.")
+                          " is still BETA sofrware. Please report any bugs.")
 }
 
