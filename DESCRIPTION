@@ -2,7 +2,7 @@ Package: dicmo
 Type: Package
 Title: Discrete Choice Modeling
 Version: 0.1.0
-Date: 2019-03-10
+Date: 2019-03-11
 Author: Xiaofeng Pan
 Maintainer: Xiaofeng Pan <pan.x@outlook.com>
 Description: Implementation of various discrete choice models, such as
