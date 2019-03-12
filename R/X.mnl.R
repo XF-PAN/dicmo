@@ -2,7 +2,11 @@
 #'
 #' @author Xiaofeng Pan
 #'
-#' @description estimate multinomial logit model
+#' @description This function could estimate multinomial logit model along with
+#'     converting the data from a wide format to a long format and code the
+#'     categorical attributesallow allow. In detail, it allows to estimate
+#'     interaction effects between attributes and alternative-specific
+#'     parameters.
 #'
 #' @export X.mnl
 #'
@@ -10,7 +14,7 @@
 #'
 #' @param data A tibble, input data, wide format.
 #'
-#' @param choice A character, name of column that is respondents' choice.
+#' @param choice A character, name of column indicating individuals' choice.
 #'
 #' @param alts A vector of characters, names of all alternatives, not including
 #'     the "none" alternative if any.
