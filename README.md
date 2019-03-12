@@ -10,7 +10,6 @@ https://xf-pan.github.io/dicmo/
 * data manipulation
   * convert a date from a wide format to a long format
   * generate the data with long format that is directly used in model estimation
-  
 * multinomial logit model estimation using maximum likelihood approach
   * help to convert the data from a wide format to a long format automatically
   * help to code the categorical attributes/variables automatically
@@ -25,14 +24,9 @@ https://xf-pan.github.io/dicmo/
 
 ## How to install dicmo?
 * first make sure the *devtools* package is installed and loaded:
-
   install.packages("devtools")
-  
   library(devtools)
-  
 * then install *dicmo* from GitHub and load it:
-
   devtools::install_github("xf-pan/dicmo")
-  
   library(dicmo)
   
