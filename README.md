@@ -1,6 +1,5 @@
 # dicmo: discrete choice modeling
 updated at 2019-03-12
-
 https://xf-pan.github.io/dicmo/
 
 ## What is dicmo?
