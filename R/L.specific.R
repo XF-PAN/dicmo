@@ -90,9 +90,11 @@ L.specific <- function(data, attrs, attr_coding, attr_level, alts){
           # generate the name of the coded level of jth attribute
           lv_name <- stringr::str_c(names(attrs_alts[, j]), ".lv", seq(1, Nlv))
 
+          unique_attrs_alts <- unique(attrs_alts[, j])
+          unique_attrs_alts <- unique_attrs_alts[unique_attrs_alts != 0, ]
           # get the names of alternatives that have a generic parameter
           alts_same <- alts[which(attrs_alts[, j] ==
-                                    as.numeric(unique(attrs_alts[, j])[i, ]))]
+                                    as.numeric(unique_attrs_alts[i, ]))]
 
           # get the name for the new column for jth attribute
           col_name <- stringr::str_c(lv_name,
@@ -172,10 +174,11 @@ L.specific <- function(data, attrs, attr_coding, attr_level, alts){
             # generate the name of the coded level of jth context
             lv_name <- stringr::str_c(names(context[, j]), ".lv", seq(1, Nlv))
 
+            unique_context <- unique(context[, j])
+            unique_context <- unique_context[unique_context != 0, ]
             # get the names of alternatives that have a generic parameter
             context_same <- alts[which(context[, j] ==
-                                         as.numeric(
-                                           unique(context[, j])[i, ]))]
+                                         as.numeric(unique_context[i, ]))]
 
             # get the name for the new column for jth context
             col_name <- stringr::str_c(lv_name,
@@ -199,7 +202,6 @@ L.specific <- function(data, attrs, attr_coding, attr_level, alts){
 
           # This "if" is for the continuous context
           if(!(names(context[, j]) %in% names(attr_coding))){
-
 
             unique_context <- unique(context[, j])
             unique_context <- unique_context[unique_context != 0, ]
