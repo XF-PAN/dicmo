@@ -1,11 +1,16 @@
 # dicmo: discrete choice modeling
-updated at 2019-03-12</br>
-https://xf-pan.github.io/dicmo/</br>
+updated at 2019-03-12
+
+https://xf-pan.github.io/dicmo/
+
 ## What is dicmo?
-*dicmo* is an R package for estimating various discrete choice models. In addition, it provides some useful functions to manipulate data before estimating the model. The current version of *dicmo* is 0.1.0.</br>
+*dicmo* is an R package for estimating various discrete choice models. In addition, it provides some useful functions to manipulate data before estimating the model. The current version of *dicmo* is 0.1.0.
+
 ## What can dicmo do?
 * data manipulation
   * convert a date from a wide format to a long format
+  * generate the data with long format that is directly used in model estimation
+  
 * multinomial logit model estimation using maximum likelihood approach
   * help to convert the data from a wide format to a long format automatically
   * help to code the categorical attributes/variables automatically
@@ -17,10 +22,17 @@ https://xf-pan.github.io/dicmo/</br>
   * allow to estimate interaction effect of context variables with alternative-specific attributes and ASCs
   * allow to compute the AVC matrix using numeric hessian matrix or BHHH algorithm
   * report various goodness of fit, i.e. initial log-likelihood, convergent log-likelihood, AIC, BIC, Rho-squared, and adjusted Rho-squared
+
 ## How to install dicmo?
-* first make sure the *devtools* package is installed and loaded:</br>
-  install.packages("devtools")</br>
-  library(devtools)</br>
-* then install *dicmo* from GitHub and load it:</br>
-  devtools::install_github("xf-pan/dicmo")</br>
-  library(dicmo)</br>
+* first make sure the *devtools* package is installed and loaded:
+
+  install.packages("devtools")
+  
+  library(devtools)
+  
+* then install *dicmo* from GitHub and load it:
+
+  devtools::install_github("xf-pan/dicmo")
+  
+  library(dicmo)
+  
