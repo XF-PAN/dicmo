@@ -7,7 +7,7 @@ Author: Xiaofeng Pan
 Maintainer: Xiaofeng Pan <pan.x@outlook.com>
 Description: Implementation of various discrete choice models, such as
     multinomial logit model, nested logit model, mixed logit model and so on.
-    For dicmo 0.1.0, only multinomial logit model is available.
+    For the current dicmo 0.1.0, only multinomial logit model is available.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
