@@ -38,11 +38,15 @@ L.specific <- function(data, attrs, attr_coding, attr_level, alts){
     # This loop is to code the alternative according to the value of asc.
     for(i in 1:(Nasc - 1)){
 
+      # get the vector that excluding 0
+      unique_asc <- unique(asc)
+      unique_asc <- unique_asc[unique_asc != 0]
+
       # code the non-zero value of asc
-      if(unique(asc)[i] != 0){
+      if(unique_asc[i] != 0){
 
         # get the names of alternatives that have the same asc
-        alts_same <- alts[which(asc == unique(asc)[i])]
+        alts_same <- alts[which(asc == unique_asc[i])]
 
         # get the colume name of the asc
         col_name <- stringr::str_c("asc",

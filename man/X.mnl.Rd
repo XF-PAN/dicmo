@@ -4,7 +4,7 @@
 \alias{X.mnl}
 \title{function to estimate multinomial logit model}
 \usage{
-X.mnl(data, choice, alts, attrs, attr_coding, attr_level,
+X.mnl(data, choice, alts, attrs, attr_coding = NULL, attr_level = NULL,
   interact = NULL, avi = NULL, opt_meth = "BFGS", estimator = TRUE,
   result = TRUE)
 }

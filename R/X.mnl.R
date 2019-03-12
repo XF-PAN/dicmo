@@ -63,9 +63,9 @@
 #'     the model. Default = TRUE.
 #'
 
-X.mnl <- function(data, choice, alts, attrs, attr_coding, attr_level,
-                 interact = NULL, avi = NULL,
-                 opt_meth = "BFGS", estimator = TRUE, result = TRUE){
+X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
+                  attr_level = NULL, interact = NULL, avi = NULL,
+                  opt_meth = "BFGS", estimator = TRUE, result = TRUE){
 
 
   # input data format check -------------------------------------------------
@@ -87,10 +87,10 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding, attr_level,
 
   # data processing - attribute coding --------------------------------------
 
-  if(!is.null(attr_coding)){
+  # Generate a prior data set for iteration, if no categorical, then set as NULL
+  data_coding <- NULL
 
-    # Generate a prior data set for iteration
-    data_coding <- NULL
+  if(!is.null(attr_coding)){
 
     # This loop is to generate coded data set of attributes one by one and
     # column-combined together.
