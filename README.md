@@ -2,8 +2,7 @@
 updated at 2019-03-12</br>
 https://xf-pan.github.io/dicmo/</br>
 ## What is dicmo?
-*dicmo* is an R package for estimating various discrete choice models. In addition, it provides some useful functions to do data
-manipulation before estimating the model. The current version of *dicmo* is 0.1.0.</br>
+*dicmo* is an R package for estimating various discrete choice models. In addition, it provides some useful functions to manipulate data before estimating the model. The current version of *dicmo* is 0.1.0.</br>
 ## What can dicmo do?
 * data manipulation
   * convert a date from a wide format to a long format
@@ -17,8 +16,7 @@ manipulation before estimating the model. The current version of *dicmo* is 0.1.
   * allow to estimate interaction effect between alternative-specific attributes
   * allow to estimate interaction effect of context variables with alternative-specific attributes and ASCs
   * allow to compute the AVC matrix using numeric hessian matrix or BHHH algorithm
-  * report various goodness of fit, i.e. initial log-likelihood, convergent log-likelihood, AIC, BIC, Rho-squared, and adjusted
-  Rho-squared
+  * report various goodness of fit, i.e. initial log-likelihood, convergent log-likelihood, AIC, BIC, Rho-squared, and adjusted Rho-squared
 ## How to install dicmo?
 * first make sure the *devtools* package is installed and loaded:</br>
   install.packages("devtools")</br>
