@@ -23,10 +23,10 @@ https://xf-pan.github.io/dicmo/
   * report various goodness of fit, i.e. initial log-likelihood, convergent log-likelihood, AIC, BIC, Rho-squared, and adjusted Rho-squared
 
 ## How to install dicmo?
-* first make sure the *devtools* package is installed and loaded:
-  install.packages("devtools")
-  library(devtools)
-* then install *dicmo* from GitHub and load it:
-  devtools::install_github("xf-pan/dicmo")
-  library(dicmo)
+* first make sure the *devtools* package is installed and loaded:  
+  install.packages("devtools")  
+  library(devtools)  
+* then install *dicmo* from GitHub and load it:  
+  devtools::install_github("xf-pan/dicmo")  
+  library(dicmo)  
   
