@@ -11,7 +11,7 @@ X.mnl(data, choice, alts, attrs, attr_coding = NULL, attr_level = NULL,
 \arguments{
 \item{data}{A tibble, input data, wide format.}
 
-\item{choice}{A character, name of column that is respondents' choice.}
+\item{choice}{A character, name of column indicating individuals' choice.}
 
 \item{alts}{A vector of characters, names of all alternatives, not including
 the "none" alternative if any.}
@@ -64,7 +64,11 @@ estimated results, otherwise it return the data that directly entering
 the model. Default = TRUE.}
 }
 \description{
-estimate multinomial logit model
+This function could estimate multinomial logit model along with
+    converting the data from a wide format to a long format and code the
+    categorical attributesallow allow. In detail, it allows to estimate
+    interaction effects between attributes and alternative-specific
+    parameters.
 }
 \author{
 Xiaofeng Pan
