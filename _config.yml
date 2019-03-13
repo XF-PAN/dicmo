@@ -1,5 +1,5 @@
 theme: jekyll-theme-slate
 title: [dicmo]
-description: [discrete choice modeling]
+description: [Package for R to estimate discrete choice models]
 show_downloads: ["true"]
 
