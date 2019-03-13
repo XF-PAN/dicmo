@@ -1,5 +1,4 @@
 theme: jekyll-theme-slate
-title: [dicmo: discrete choice modeling]
-description: [dicmo is an R package for estimating various discrete choice
-    models. In addition, it provides some useful functions to manipulate data
-    before estimating the model. The current version of dicmo is 0.1.0.]
+title: [dicmo]
+description: [discrete choice modeling]
+show_downloads: ["true"]
