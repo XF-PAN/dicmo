@@ -1,5 +1,4 @@
 updated at 2019-03-13  
-https://xf-pan.github.io/dicmo/
 
 ## What is dicmo?
 *dicmo* is an R package for estimating various discrete choice models. In addition, it provides some useful functions to manipulate data before estimating the model. The current version of *dicmo* is 0.1.0.
@@ -28,5 +27,5 @@ https://xf-pan.github.io/dicmo/
   devtools::install_github("xf-pan/dicmo")  
   library(dicmo)  
   
-* the package source and windows binary can be found in: https://xf-pan.github.io/dicmo/  
+* the package source and Windows binary can be found in: https://xf-pan.github.io/dicmo/  
   
