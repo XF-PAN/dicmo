@@ -16,8 +16,8 @@
 #'
 #' @param choice A character, name of column indicating individuals' choice.
 #'
-#' @param alts A vector of characters, names of all alternatives, not including
-#'     the "none" alternative if any.
+#' @param alts A vector of characters, names of all alternatives, including
+#'     the none-option if any.
 #'
 #' @param attrs A list contains two tibbles and a vector, whose elements are
 #'     integers. The first one is a tibble represents the alternative-specific
