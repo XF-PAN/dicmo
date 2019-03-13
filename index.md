@@ -13,4 +13,4 @@ the names of alternatives
 have one-to-one correspondence in sequence.
 * Highly recommend to always include the alternative-available column, i.e. the
 "avi" argument.
-* Highly recommend to first estimate the model without setting anything for the argument "interact", "param_ini" and "param_fixed" to know the names of estimated parameters. Then set these arguments if it is needed.
+* Highly recommend to first estimate the model without setting anything for the argument "interact", "param_ini" and "param_fixed" to know the names of estimated parameters, then set these arguments if it is needed.
