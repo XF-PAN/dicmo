@@ -17,6 +17,8 @@ updated at 2019-03-13
   * allow to estimate interaction effect between alternative-specific attributes
   * allow to estimate interaction effect of context variables with alternative-specific attributes and ASCs
   * allow to compute the AVC matrix using numeric hessian matrix or BHHH algorithm
+  * allow to customize the initial values of the estimated parameters
+  * allow to fix the values of certain estimated parameters 
   * report various goodness of fit, i.e. initial log-likelihood, convergent log-likelihood, AIC, BIC, Rho-squared, and adjusted Rho-squared
 
 ## How to install dicmo?

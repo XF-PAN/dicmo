@@ -11,7 +11,6 @@ the names of alternatives
 * In the argument "attrs", negative number is not allowed.
 * The elemets in the argument "attr_coding" and "attr_level" do not necessary
 have one-to-one correspondence in sequence.
-
 * Highly recommend to always include the alternative-available column, i.e. the
 "avi" argument.  
 

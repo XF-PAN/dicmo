@@ -63,6 +63,13 @@
 #'     package. Here this argument could only be either TRUE or "BHHH"/"bhhh".
 #'     Default = TRUE.
 #'
+#' @param param_fixed A vector of characters, passed to the function maxLik() in
+#'     "maxLik" package. It indicates which parameters are fixed. Default = NULL.
+#'
+#' @param param_ini A vector of numbers, passed to the function maxLik() in
+#'     "maxLik" package. It indicages the initial values of parameters.
+#'     Default = NULL.
+#'
 #' @param result A logical argument. If it is TRUE, the function return the
 #'     estimated results, otherwise it return the data that directly entering
 #'     the model. Default = TRUE.
@@ -70,11 +77,15 @@
 
 X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
                   attr_level = NULL, interact = NULL, avi = NULL,
-                  opt_meth = "BFGS", estimator = TRUE, result = TRUE){
+                  opt_meth = "BFGS", estimator = TRUE,
+                  param_fixed = NULL, param_ini = NULL,
+                  result = TRUE){
 
   # data preparation and return the data set can be used and the utility formula
-  process_data <- L.data(data, choice, alts, attrs, attr_coding,
-                         attr_level, interact, avi)
+  process_data <- L.data(data = data, choice = choice, alts = alts,
+                         attrs = attrs, attr_coding = attr_coding,
+                         attr_level = attr_level, interact = interact,
+                         avi = avi)
 
   # get the data set
   data <- process_data[[1]]
@@ -94,6 +105,7 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
     Nparam <- length(name_param)
     beta <- rep(0, Nparam)
     names(beta) <- name_param
+    beta[names(param_ini)] <- param_ini
     chid <- factor(data$obs.id)
     Nalt <- length(alts)
     Nobs <- nrow(df) / Nalt
@@ -102,6 +114,7 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
     res <- maxLik::maxLik(logLik = logLik.mnl,
                           start = beta,
                           method = opt_meth,
+                          fixed = param_fixed,
                           finalHessian = estimator,
                           control = list(iterlim = 1000),
                           attr = x, choice = y, chid = chid,
@@ -110,8 +123,10 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
 
     # goodness of fit and return it -------------------------------------------
 
-    L.gof.mnl(res, Nalt, Nobs, Nparam,
-               avi = as.matrix(data[avi]), chid = chid)
+    L.gof.mnl(res = res, Nalt = Nalt, Nobs = Nobs,
+              Nparam = Nparam - length(param_fixed),
+              param_fixed = param_fixed, avi = as.matrix(data[avi]),
+              chid = chid)
   }else{
 
     df <- stats::model.frame(utility, data)

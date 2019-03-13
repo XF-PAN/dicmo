@@ -1,6 +1,7 @@
-L.gof.mnl <- function(res, Nalt, Nobs, Nparam, avi, chid){
+L.gof.mnl <- function(res, Nalt, Nobs, Nparam, param_fixed, avi, chid){
 
   se <- sqrt(diag(solve(-res$hessian)))
+  se[param_fixed] <- NA
   t0 <- res$estimate / se
   p_value <- (1 - stats::pnorm(abs(t0))) * 2
   Initial_LL <- - sum(log(rowsum(avi, chid)))
