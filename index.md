@@ -12,7 +12,5 @@ the names of alternatives
 * The elemets in the argument "attr_coding" and "attr_level" do not necessary
 have one-to-one correspondence in sequence.
 * Highly recommend to always include the alternative-available column, i.e. the
-"avi" argument.  
-
-
-
+"avi" argument.
+* Highly recommend to first estimate the model without setting anything for the argument "interact", "param_ini" and "param_fixed" to know the names of estimated parameters. Then set these arguments if it is needed.
