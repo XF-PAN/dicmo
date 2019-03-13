@@ -28,3 +28,5 @@ https://xf-pan.github.io/dicmo/
   devtools::install_github("xf-pan/dicmo")  
   library(dicmo)  
   
+* the package source and windows binary can be found in: https://xf-pan.github.io/dicmo/  
+  
