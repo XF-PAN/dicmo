@@ -2,3 +2,11 @@ theme: jekyll-theme-slate
 title: [dicmo]
 description: [discrete choice modeling]
 show_downloads: ["true"]
+
+collections:
+  episodes:
+    output: true
+  seasons:
+    output: true
+  characters:
+output: true
