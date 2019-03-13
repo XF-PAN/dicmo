@@ -1,4 +1,4 @@
-theme: jekyll-theme-slate
+# theme: jekyll-theme-slate
 title: [dicmo]
 description: [discrete choice modeling]
 show_downloads: ["true"]
@@ -30,3 +30,6 @@ defaults:
       type: "seasons"
     values:
 layout: "season"
+
+gems:
+- octopress-paginate
