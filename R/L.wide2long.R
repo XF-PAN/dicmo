@@ -8,19 +8,19 @@
 #'
 #' @param data A tibble, input data.
 #'
-#' @param choice A character, name of column that is respondents' choice.
+#' @param choice A character, name of column that is individuals' choice.
 #'
-#' @param alts A vector of characters, names of all alternatives, not including
-#'     the "none" alternative if any.
+#' @param alts A vector of characters, names of all alternatives, including the
+#'     none-option if any.
 #'
 #' @param avi A character, name of column indicating if an alternative is
-#'     available to respondents. Default = NULL, indicating all alternatives are
+#'     available to individuals. Default = NULL, indicating all alternatives are
 #'     available to all respondents. Each alternative should have such a column,
 #'     for example, avi = "available" then the column's name for an alternative
-#'     (e.g. the alternative's name is "car") should be "available_car". If this
-#'     parameter is NULL, then those columns are not necessary. If this
-#'     parameter is not NULL, then in such as column, the element should be 0 if
-#'     the alternative is not available otherwise 1.
+#'     (e.g. the alternative's name is "car") should be "available:car" or
+#'     "car:avilable". If this parameter is NULL, then those columns are not
+#'     necessary. If this parameter is not NULL, then in such as column, the
+#'     element should be 0 if the alternative is not available otherwise 1.
 
 L.wide2long <- function(data, choice, alts, avi = NULL){
 

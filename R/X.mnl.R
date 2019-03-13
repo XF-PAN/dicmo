@@ -19,20 +19,21 @@
 #' @param alts A vector of characters, names of all alternatives, including
 #'     the none-option if any.
 #'
-#' @param attrs A list contains two tibbles and a vector, whose elements are
-#'     integers. The first one is a tibble represents the alternative-specific
-#'     attributes (excluding ASCs), the secodn one is a vector represent the
-#'     ASCs, and the third one is a tibble represents the context variables.
-#'     The column names in all tibbles represent the name of attributes,
-#'     constants or variables. All have same numbers of rows (elements) with
-#'     the length of argument "alts". The element in tibbles/vector indicates
-#'     if the attribute, constant or variable is alternative specific: "0"
-#'     means the attribute, constaant or variable is set as base for the
-#'     corresponding alternative; except "0", if some elements in one column
-#'     have a same value, then the corresponding alternatives have generic
-#'     parameter in terms of this attribute, constant or variable. The vector
-#'     and second tibble in the list are defaultly set as NULL, which means no
-#'     ASCs or context variables are taken into consideration.
+#' @param attrs A list contains three slices, whose elements have to be non-
+#'     negative integers. The first one is a tibble, named "attrs_alts",
+#'     indicating the alternative-specific attributes (excluding ASCs); the
+#'     second one, named "asc", is a vector indicating the ASCs, and the third
+#'     one, named "context", is a tibble indicating the context variables
+#'     (includig individuals' socio-demographics). The column names in all
+#'     tibbles represent the name of attributes, or context variables. All have
+#'     same numbers of rows (elements) with the length of argument "alts". The
+#'     element in tibbles/vector indicates if the attribute, constant or
+#'     context variable is alternative-specific: "0" means the attribute,
+#'     constaant or context variable is not available for the alternative
+#'     (based on the sequence of alternative in the argument "alts"); except
+#'     "0", if some elements in one column have a same value, then the
+#'     corresponding alternatives have generic parameter in terms of this
+#'     attribute, constant or context variable.
 #'
 #' @param attr_coding A vector of character, names of categorical attributes.
 #'     Default = NULL, which means all attributes are continuous.
@@ -43,16 +44,16 @@
 #'     relevent when argument "attr_coding" is not NULL. Default = NULL.
 #'
 #' @param interact A vector of character, name of attributes' interaction,
-#'     connected by "*", default = NULL.
+#'     connected by "*". Default = NULL.
 #'
 #' @param avi A character, name of column indicating if an alternative is
-#'     available to respondents. Default = NULL, indicating all alternatives are
+#'     available to individuals. Default = NULL, indicating all alternatives are
 #'     available to all respondents. Each alternative should have such a column,
 #'     for example, avi = "available" then the column's name for an alternative
-#'     (e.g. the alternative's name is "car") should be "available_car". If this
-#'     parameter is NULL, then those columns are not necessary. If this
-#'     parameter is not NULL, then in such as column, the element should be 0 if
-#'     the alternative is not available otherwise 1.
+#'     (e.g. the alternative's name is "car") should be "available:car" or
+#'     "car:avilable". If this parameter is NULL, then those columns are not
+#'     necessary. If this parameter is not NULL, then in such as column, the
+#'     element should be 0 if the alternative is not available otherwise 1.
 #'
 #' @param opt_meth A character, passed to the function maxLik() in "maxLik"
 #'     package. It indicates the method used in maximum likelihood estimation.
