@@ -110,6 +110,8 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
     Nalt <- length(alts)
     Nobs <- nrow(df) / Nalt
 
+    if(is.null(avi)) avi <- "alt.avi"
+
     cat("Estimation starts at:", date(), "\n")
     res <- maxLik::maxLik(logLik = logLik.mnl,
                           start = beta,
@@ -129,6 +131,7 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
               chid = chid)
   }else{
 
+    if(is.null(avi)) avi <- "alt.avi"
     df <- stats::model.frame(utility, data)
     df <- as.matrix(cbind(data["obs.id"], df, data[avi]))
   }
