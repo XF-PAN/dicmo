@@ -1,14 +1,10 @@
-#' @title function to estimate multinomial logit model
+#' @title function to data manipulation for model estimation
 #'
 #' @author Xiaofeng Pan
 #'
-#' @description This function could estimate multinomial logit model along with
-#'     converting the data from a wide format to a long format and code the
-#'     categorical attributesallow allow. In detail, it allows to estimate
-#'     interaction effects between attributes and alternative-specific
-#'     parameters.
+#' @description This function help to prepare data for model estimation.
 #'
-#' @export X.mnl
+#' @export X.data
 #'
 #' @importFrom rlang :=
 #'
@@ -55,26 +51,9 @@
 #'     necessary. If this parameter is not NULL, then in such as column, the
 #'     element should be 0 if the alternative is not available otherwise 1.
 #'
-#' @param opt_meth A character, passed to the function maxLik() in "maxLik"
-#'     package. It indicates the method used in maximum likelihood estimation.
-#'     Default = "BFGS".
-#'
-#' @param estimator A argument in the function maxLik() from "maxLik"
-#'     package. Here this argument could only be either TRUE or "BHHH"/"bhhh".
-#'     Default = TRUE.
-#'
-#' @param param_fixed A vector of characters, passed to the function maxLik() in
-#'     "maxLik" package. It indicates which parameters are fixed. Default = NULL.
-#'
-#' @param param_ini A vector of numbers, passed to the function maxLik() in
-#'     "maxLik" package. It indicages the initial values of parameters.
-#'     Default = NULL.
-#'
 
-X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
-                  attr_level = NULL, interact = NULL, avi = NULL,
-                  opt_meth = "BFGS", estimator = TRUE,
-                  param_fixed = NULL, param_ini = NULL){
+X.data <- function(data, choice, alts, attrs, attr_coding = NULL,
+                  attr_level = NULL, interact = NULL, avi = NULL){
 
   # data preparation and return the data set can be used and the utility formula
   process_data <- L.data(data = data, choice = choice, alts = alts,
@@ -88,37 +67,10 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
   # get the utiity formula
   utility <- process_data[[2]]
 
-  # model estimation --------------------------------------------------------
-
-  df <- stats::model.frame(utility, data)
-  y <- df[[1]]
-  x <- as.matrix(df[, -1])
-  name_param <- names(df[, -1])
-  Nparam <- length(name_param)
-  beta <- rep(0, Nparam)
-  names(beta) <- name_param
-  beta[names(param_ini)] <- param_ini
-  chid <- factor(data$obs.id)
-  Nalt <- length(alts)
-  Nobs <- nrow(df) / Nalt
+  # if argument result = TRUE, do model estimation, otherwise return the data
 
   if(is.null(avi)) avi <- "alt.avi"
+  df <- stats::model.frame(utility, data)
+  df <- as.matrix(cbind(data["obs.id"], df, data[avi]))
 
-  cat("Estimation starts at:", date(), "\n")
-  res <- maxLik::maxLik(logLik = logLik.mnl,
-                        start = beta,
-                        method = opt_meth,
-                        fixed = param_fixed,
-                        finalHessian = estimator,
-                        control = list(iterlim = 1000),
-                        attr = x, choice = y, chid = chid,
-                        avi = as.matrix(data[avi]))
-  cat("Estimation ends at:", date(), "\n")
-
-  # goodness of fit and return it -------------------------------------------
-
-  L.gof.mnl(res = res, Nalt = Nalt, Nobs = Nobs,
-            Nparam = Nparam - length(param_fixed),
-            param_fixed = param_fixed, avi = as.matrix(data[avi]),
-            chid = chid)
 }
