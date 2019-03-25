@@ -55,7 +55,7 @@
 #'     necessary. If this parameter is not NULL, then in such as column, the
 #'     element should be 0 if the alternative is not available otherwise 1.
 #'
-#' @param opt_meth A character, passed to the function maxLik() in "maxLik"
+#' @param method A character, passed to the function maxLik() in "maxLik"
 #'     package. It indicates the method used in maximum likelihood estimation.
 #'     Default = "BFGS".
 #'
@@ -66,15 +66,15 @@
 #' @param param_fixed A vector of characters, passed to the function maxLik() in
 #'     "maxLik" package. It indicates which parameters are fixed. Default = NULL.
 #'
-#' @param param_ini A vector of numbers, passed to the function maxLik() in
+#' @param param_start A vector of numbers, passed to the function maxLik() in
 #'     "maxLik" package. It indicages the initial values of parameters.
 #'     Default = NULL.
 #'
 
 X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
                   attr_level = NULL, interact = NULL, avi = NULL,
-                  opt_meth = "BFGS", estimator = TRUE,
-                  param_fixed = NULL, param_ini = NULL){
+                  method = "BFGS", estimator = TRUE,
+                  param_fixed = NULL, param_start = NULL){
 
   # data preparation and return the data set can be used and the utility formula
   process_data <- L.data(data = data, choice = choice, alts = alts,
@@ -97,7 +97,7 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
   Nparam <- length(name_param)
   beta <- rep(0, Nparam)
   names(beta) <- name_param
-  beta[names(param_ini)] <- param_ini
+  beta[names(param_start)] <- param_start
   chid <- factor(data$obs.id)
   Nalt <- length(alts)
   Nobs <- nrow(df) / Nalt
@@ -107,7 +107,7 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
   cat("Estimation starts at:", date(), "\n")
   res <- maxLik::maxLik(logLik = logLik.mnl,
                         start = beta,
-                        method = opt_meth,
+                        method = method,
                         fixed = param_fixed,
                         finalHessian = estimator,
                         control = list(iterlim = 1000),

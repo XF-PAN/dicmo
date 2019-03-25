@@ -5,8 +5,8 @@
 \title{function to estimate multinomial logit model}
 \usage{
 X.mnl(data, choice, alts, attrs, attr_coding = NULL, attr_level = NULL,
-  interact = NULL, avi = NULL, opt_meth = "BFGS", estimator = TRUE,
-  param_fixed = NULL, param_ini = NULL)
+  interact = NULL, avi = NULL, method = "BFGS", estimator = TRUE,
+  param_fixed = NULL, param_start = NULL)
 }
 \arguments{
 \item{data}{A tibble, input data, wide format.}
@@ -52,7 +52,7 @@ for example, avi = "available" then the column's name for an alternative
 necessary. If this parameter is not NULL, then in such as column, the
 element should be 0 if the alternative is not available otherwise 1.}
 
-\item{opt_meth}{A character, passed to the function maxLik() in "maxLik"
+\item{method}{A character, passed to the function maxLik() in "maxLik"
 package. It indicates the method used in maximum likelihood estimation.
 Default = "BFGS".}
 
@@ -63,7 +63,7 @@ Default = TRUE.}
 \item{param_fixed}{A vector of characters, passed to the function maxLik() in
 "maxLik" package. It indicates which parameters are fixed. Default = NULL.}
 
-\item{param_ini}{A vector of numbers, passed to the function maxLik() in
+\item{param_start}{A vector of numbers, passed to the function maxLik() in
 "maxLik" package. It indicages the initial values of parameters.
 Default = NULL.}
 }
