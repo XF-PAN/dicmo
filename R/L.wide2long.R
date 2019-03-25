@@ -1,6 +1,6 @@
 #' @title reshape the data from wide format to long format
 #'
-#' @author Xiaofeng Pan
+#' @author X.PAN
 #'
 #' @description reshape the data from wide format to long format
 #'

@@ -1,14 +1,14 @@
-#' @title function to estimate multinomial logit model
+#' @title function to estimate 2-level nested logit model
 #'
 #' @author X.PAN
 #'
-#' @description This function could estimate multinomial logit model along with
-#'     converting the data from a wide format to a long format and code the
+#' @description This function could estimate 2-level nested logit model along
+#'     with converting the data from a wide format to a long format and code the
 #'     categorical attributesallow allow. In detail, it allows to estimate
 #'     interaction effects between attributes and alternative-specific
 #'     parameters.
 #'
-#' @export X.mnl
+#' @export X.nl2
 #'
 #' @importFrom rlang :=
 #'
@@ -34,6 +34,13 @@
 #'     "0", if some elements in one column have a same value, then the
 #'     corresponding alternatives have generic parameter in terms of this
 #'     attribute, constant or context variable.
+#'
+#' @param nest A list, indicating how many nests at all and which alternatives
+#'     are in the same nest.
+#'
+#' @param nest_uni A logical, indicating if the inclusive values for the nests
+#'     are the same or not. Default = TRUE, means the inclusive values are the
+#'     same.
 #'
 #' @param attr_coding A vector of character, names of categorical attributes.
 #'     Default = NULL, which means all attributes are continuous.
@@ -71,8 +78,9 @@
 #'     Default = NULL.
 #'
 
-X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
-                  attr_level = NULL, interact = NULL, avi = NULL,
+X.nl2 <- function(data, choice, alts, attrs, nest, nest_uni =TRUE,
+                  attr_coding = NULL, attr_level = NULL,
+                  interact = NULL, avi = NULL,
                   opt_meth = "BFGS", estimator = TRUE,
                   param_fixed = NULL, param_ini = NULL){
 
@@ -102,17 +110,66 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
   Nalt <- length(alts)
   Nobs <- nrow(df) / Nalt
 
+  # data process - nest -----------------------------------------------------
+
+  data <- dplyr::mutate(data,
+                        nest.alt = 'none.nest',
+                        nest.alt.id = 0)
+
+  for(i in 1:length(nest)){
+
+    data$'nest.alt'[data$alt.name %in% nest[[i]]] <-
+      stringr::str_c('iv.', names(nest[i]))
+
+    data$'nest.alt.id'[data$alt.name %in% nest[[i]]] <- i
+  }
+
+  nest.choice <- dplyr::filter(data, choice == TRUE)['nest.alt']
+  nest.choice <- matrix(as.matrix(nest.choice),
+                        nrow = nrow(nest.choice), ncol = Nalt)
+  nest.choice <- as.vector(t(nest.choice))
+  nest.choice <- nest.choice == data$nest.alt
+
+  if(nest_uni == FALSE){
+
+    iv <- stringr::str_c('iv.', names(nest))
+    beta[iv] <- 1
+  } else{
+
+    data$'nest.alt'[data$alt.name %in% unlist(nest)] <- 'iv'
+
+    # for(i in 1:length(nest)){
+    #
+    #   data$'nest.alt'[data$alt.name %in% nest[[i]]] <- 'iv'
+    # }
+
+    beta['iv'] <- 1
+  }
+
+  nest.id <- stringr::str_c(data$obs.id, data$nest.alt.id, sep = "-")
+
+  nest.id.distinct = nest.id[!duplicated(nest.id)]
+
+  nest.group <- stringr::str_split(nest.id.distinct, pattern = '-',
+                                   simplify = TRUE)[, 1]
+
   if(is.null(avi)) avi <- "alt.avi"
 
   cat("Estimation starts at:", date(), "\n")
-  res <- maxLik::maxLik(logLik = logLik.mnl,
+  res <- maxLik::maxLik(logLik = logLik.nl2,
                         start = beta,
                         method = opt_meth,
                         fixed = param_fixed,
                         finalHessian = estimator,
                         control = list(iterlim = 1000),
                         attr = x, choice = y, chid = chid,
-                        avi = as.matrix(data[avi]))
+                        avi = as.matrix(data[avi]),
+                        nest.alt = data$nest.alt,
+                        nest.choice = nest.choice,
+                        nest.id = nest.id,
+                        nest.id.distinct = nest.id.distinct,
+                        chid.distinct = chid[!duplicated(chid)],
+                        nest.group = nest.group)
   cat("Estimation ends at:", date(), "\n")
 
   # goodness of fit and return it -------------------------------------------

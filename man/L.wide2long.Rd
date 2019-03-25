@@ -27,5 +27,5 @@ element should be 0 if the alternative is not available otherwise 1.}
 reshape the data from wide format to long format
 }
 \author{
-Xiaofeng Pan
+X.PAN
 }

@@ -1,18 +1,18 @@
-#' @title S3 method for class 'Xmnl'
+#' @title S3 method for class 'dicmo'
 #'
-#' @author Xiaofeng Pan
+#' @author X.PAN
 #'
-#' @description summary results for class 'Xmnl'
+#' @description summary results for class 'dicmo'
 #'
 #' @export
 #'
-#' @param object A 'Xmnl' class object
+#' @param object A 'dicmo' class object
 #'
 #' @param ... Other parameters that are not defined
 #'
-#' @method summary Xmnl
+#' @method summary dicmo
 
-summary.Xmnl <- function(object, ...){
+summary.dicmo <- function(object, ...){
   res <- data.frame(coef. = object$Estimate,
                     std.err = object$std_err,
                     t.value = object$t_value,

@@ -1,13 +1,14 @@
 Package: dicmo
 Type: Package
 Title: Discrete Choice Modeling
-Version: 0.2.0
-Date: 2019-03-17
-Author: Xiaofeng Pan
-Maintainer: Xiaofeng Pan <pan.x@outlook.com>
+Version: 0.1.0
+Date: 2019-03-25
+Author: X.PAN
+Maintainer: X.PAN <ixavier@aliyun.com>
 Description: Estimation of various discrete choice models, such as
     multinomial logit model, nested logit model, mixed logit model and so on.
-    For dicmo 0.1.0, only multinomial logit model is available.
+    For dicmo 0.1.0, multinomial logit model and 2-level nested logit model are
+    available.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -21,6 +22,5 @@ Imports:
     dplyr (>= 0.7.8),
     tibble (>= 1.4.2),
     rlang (>= 0.3.0.1)
-URL: https://xf-pan.github.io/dicmo
-BugReports: http://github.com/xf-evans/dicmo/issues
-
+URL: https://xf-pan.github.io/dicmo/
+BugReports: https://github.com/xf-pan/dicmo/issues

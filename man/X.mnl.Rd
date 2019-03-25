@@ -75,5 +75,5 @@ This function could estimate multinomial logit model along with
     parameters.
 }
 \author{
-Xiaofeng Pan
+X.PAN
 }

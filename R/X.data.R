@@ -1,6 +1,6 @@
 #' @title function to data manipulation for model estimation
 #'
-#' @author Xiaofeng Pan
+#' @author X.PAN
 #'
 #' @description This function help to prepare data for model estimation.
 #'

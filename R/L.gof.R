@@ -1,4 +1,4 @@
-L.gof.mnl <- function(res, Nalt, Nobs, Nparam, param_fixed, avi, chid){
+L.gof <- function(res, Nalt, Nobs, Nparam, param_fixed, avi, chid){
 
   se <- sqrt(diag(solve(-res$hessian)))
   se[param_fixed] <- NA
@@ -23,7 +23,7 @@ L.gof.mnl <- function(res, Nalt, Nobs, Nparam, param_fixed, avi, chid){
                   Parameter_Number = Nparam,
                   AIC = round(AIC, 4),
                   BIC = round(BIC, 4))
-  class(results) <- "Xmnl"
+  class(results) <- "dicmo"
 
   return(results)
 }
