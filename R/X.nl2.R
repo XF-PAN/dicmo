@@ -84,6 +84,8 @@ X.nl2 <- function(data, choice, alts, attrs, nest, nest_uni =TRUE,
                   method = "BFGS", estimator = TRUE,
                   param_fixed = NULL, param_start = NULL){
 
+  # data preparation --------------------------------------------------------
+
   # data preparation and return the data set can be used and the utility formula
   process_data <- L.data(data = data, choice = choice, alts = alts,
                          attrs = attrs, attr_coding = attr_coding,
@@ -96,8 +98,6 @@ X.nl2 <- function(data, choice, alts, attrs, nest, nest_uni =TRUE,
   # get the utiity formula
   utility <- process_data[[2]]
 
-  # model estimation --------------------------------------------------------
-
   df <- stats::model.frame(utility, data)
   y <- df[[1]]
   x <- as.matrix(df[, -1])
@@ -105,55 +105,22 @@ X.nl2 <- function(data, choice, alts, attrs, nest, nest_uni =TRUE,
   Nparam <- length(name_param)
   beta <- rep(0, Nparam)
   names(beta) <- name_param
-  beta[names(param_start)] <- param_start
   chid <- factor(data$obs.id)
   Nalt <- length(alts)
   Nobs <- nrow(df) / Nalt
 
-  # data process - nest -----------------------------------------------------
+  # nest structure setting
+  nest.prop <- L.nest(data = data, nest = nest, choice = choice,
+                      nest_uni = nest_uni, Nalt = Nalt, beta = beta)
 
-  data <- dplyr::mutate(data,
-                        nest.alt = 'none.nest',
-                        nest.alt.id = 0)
+  # initialize the start value of beta
+  beta <- nest.prop[['beta']]
+  beta[names(param_start)] <- param_start
 
-  for(i in 1:length(nest)){
-
-    data$'nest.alt'[data$alt.name %in% nest[[i]]] <-
-      stringr::str_c('iv.', names(nest[i]))
-
-    data$'nest.alt.id'[data$alt.name %in% nest[[i]]] <- i
-  }
-
-  nest.choice <- dplyr::filter(data, get(choice) == TRUE)['nest.alt']
-  nest.choice <- matrix(as.matrix(nest.choice),
-                        nrow = nrow(nest.choice), ncol = Nalt)
-  nest.choice <- as.vector(t(nest.choice))
-  nest.choice <- nest.choice == data$nest.alt
-
-  if(nest_uni == FALSE){
-
-    iv <- stringr::str_c('iv.', names(nest))
-    beta[iv] <- 1
-  } else{
-
-    data$'nest.alt'[data$alt.name %in% unlist(nest)] <- 'iv'
-
-    # for(i in 1:length(nest)){
-    #
-    #   data$'nest.alt'[data$alt.name %in% nest[[i]]] <- 'iv'
-    # }
-
-    beta['iv'] <- 1
-  }
-
-  nest.id <- stringr::str_c(data$obs.id, data$nest.alt.id, sep = "-")
-
-  nest.id.distinct = nest.id[!duplicated(nest.id)]
-
-  nest.group <- stringr::str_split(nest.id.distinct, pattern = '-',
-                                   simplify = TRUE)[, 1]
-
+  # update the 'avi' argument
   if(is.null(avi)) avi <- "alt.avi"
+
+  # model estimation --------------------------------------------------------
 
   cat("Estimation starts at:", date(), "\n")
   res <- maxLik::maxLik(logLik = logLik.nl2,
@@ -164,12 +131,10 @@ X.nl2 <- function(data, choice, alts, attrs, nest, nest_uni =TRUE,
                         control = list(iterlim = 1000),
                         attr = x, choice = y, chid = chid,
                         avi = as.matrix(data[avi]),
-                        nest.alt = data$nest.alt,
-                        nest.choice = nest.choice,
-                        nest.id = nest.id,
-                        nest.id.distinct = nest.id.distinct,
-                        chid.distinct = chid[!duplicated(chid)],
-                        nest.group = nest.group)
+                        nest.alt = nest.prop[['nest.alt']],
+                        nest.choice = nest.prop[['nest.choice']],
+                        nest.id = nest.prop[['nest.id']],
+                        nest.group = nest.prop[['nest.group']])
   cat("Estimation ends at:", date(), "\n")
 
   # goodness of fit and return it -------------------------------------------

@@ -1,6 +1,5 @@
 logLik.nl2 <- function(beta, attr, choice, chid, avi,
-                       nest.alt, nest.choice, nest.id,
-                       nest.id.distinct, chid.distinct, nest.group){
+                       nest.alt, nest.choice, nest.id, nest.group){
 
   iv <- beta[nest.alt]
   iv[is.na(iv)] <- 1

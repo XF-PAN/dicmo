@@ -67,8 +67,6 @@ X.data <- function(data, choice, alts, attrs, attr_coding = NULL,
   # get the utiity formula
   utility <- process_data[[2]]
 
-  # if argument result = TRUE, do model estimation, otherwise return the data
-
   if(is.null(avi)) avi <- "alt.avi"
   df <- stats::model.frame(utility, data)
   df <- as.matrix(cbind(data["obs.id"], df, data[avi]))
