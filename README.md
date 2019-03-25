@@ -20,6 +20,7 @@ updated at 2019-03-13
   * allow to customize the initial values of the estimated parameters
   * allow to fix the values of certain estimated parameters 
   * report various goodness of fit, i.e. initial log-likelihood, convergent log-likelihood, AIC, BIC, Rho-squared, and adjusted Rho-squared
+* 2-level nested logit model estimation using maximum likelihood approach
 
 ## How to install dicmo?
 * first make sure the *devtools* package is installed and loaded:  
