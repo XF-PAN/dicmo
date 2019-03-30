@@ -6,7 +6,7 @@ logLik.nl2 <- function(beta, attr, choice, chid, avi,
 
   iv.distinct <- iv[!duplicated(nest.id)]
 
-  exp_v <- exp((attr %*% beta[1:ncol(attr)] + log(avi)) / iv)
+  exp_v <- exp((attr %*% beta[1:ncol(attr)]) / iv) * avi
   exp_v_nest <- rowsum(exp_v * nest.choice, chid)
 
   numerator <- rowsum(exp_v * choice, chid) *
