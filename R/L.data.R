@@ -1,5 +1,38 @@
 L.data <- function(data, choice, alts, attrs, attr_coding,
-                   attr_level, interact, avi){
+                   attr_level, interact, avi, flag = "nomial"){
+
+  # re-formulate the argument "attrs" for ordered choice --------------------
+
+  if(flag == "order"){
+
+    attrs_alts <- attrs[["attrs_alts"]]
+    context <- attrs[["context"]]
+    attrs_alts_tbl <- NULL
+    context_tbl <- NULL
+
+    for(i in 1:length(attrs_alts)){
+
+      attrs_name <- attrs_alts[i]
+      attrs_alts_tbl_tmp <- tibble::tibble(!!attrs_name := rep(1, length(alts)))
+
+      attrs_alts_tbl <- dplyr::bind_cols(attrs_alts_tbl, attrs_alts_tbl_tmp)
+    }
+
+    if(!is.null(context)){
+
+      for(i in 1:length(context)){
+
+        context_name <- context[i]
+        context_tbl_tmp <- tibble::tibble(!!context_name := rep(1, length(alts)))
+
+        context_tbl <- dplyr::bind_cols(context_tbl, context_tbl_tmp)
+      }
+    }
+
+    attrs <- list(attrs_alts = attrs_alts_tbl,
+                  asc = rep(0, length(alts)),
+                  context = context_tbl)
+  }
 
   # input data format check -------------------------------------------------
 
@@ -51,7 +84,8 @@ L.data <- function(data, choice, alts, attrs, attr_coding,
   # this function return the data that is specified based on alternatives
   data_specific <- L.specific(data = data, attrs = attrs,
                               attr_coding = attr_coding,
-                              attr_level = attr_level, alts = alts)
+                              attr_level = attr_level, alts = alts,
+                              flag = flag)
 
   # get the alternative-specific attributes and context variables
   attrs_specific <- dplyr::bind_cols(attrs[["attrs_alts"]],

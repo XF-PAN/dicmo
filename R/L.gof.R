@@ -1,17 +1,37 @@
-L.gof <- function(res, Nalt, Nobs, Nparam, param_fixed, avi, chid){
+L.gof <- function(res, Nalt, Nobs, Nparam, param_fixed,
+                  avi = NULL, chid = NULL, flag = "nomial"){
 
-  se <- sqrt(diag(solve(-res$hessian)))
-  se[param_fixed] <- NA
-  t0 <- res$estimate / se
+  if(!is.null(param_fixed)){
+
+    id_fixed <- which(names(res$estimate) %in% param_fixed)
+    hessian_mrx <- res$hessian[-id_fixed, -id_fixed]
+    estimate <- res$estimate[-id_fixed]
+  } else{
+
+    hessian_mrx <- res$hessian
+    estimate <- res$estimate
+  }
+
+  se <- sqrt(diag(solve(-hessian_mrx)))
+  t0 <- estimate / se
   p_value <- (1 - stats::pnorm(abs(t0))) * 2
-  Initial_LL <- - sum(log(rowsum(avi, chid)))
+
+  if(flag != "order"){
+
+    Initial_LL <- - sum(log(rowsum(avi, chid)))
+  } else{
+
+    Initial_LL <- -Nobs * log(Nalt)
+  }
+
+
   Rho_squared <- 1 - res$maximum / Initial_LL
   Adj_Rho_squared <- 1 - (res$maximum - Nparam) / Initial_LL
   AIC <- 2 * Nparam - 2 * res$maximum
   BIC <- log(Nobs) * Nparam - 2 * res$maximum
 
-  results <- list(Hessian = res$hessian,
-                  Estimate = round(res$estimate, 6),
+  results <- list(Hessian = hessian_mrx,
+                  Estimate = round(estimate, 6),
                   std_err = round(se, 6),
                   t_value = round(t0, 4),
                   p_value = round(p_value, 4),

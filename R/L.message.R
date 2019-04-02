@@ -5,5 +5,7 @@
                         fields = "Maintainer")
     packageStartupMessage(paste(pkgname, version),
                           " is still BETA sofrware. Please report any bugs.")
+    packageStartupMessage("URL: https://xf-pan.github.io/dicmo/")
+    packageStartupMessage("BugReports: https://github.com/xf-pan/dicmo/issues")
 }
 

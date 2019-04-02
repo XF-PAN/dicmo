@@ -1,4 +1,4 @@
-L.specific <- function(data, attrs, attr_coding, attr_level, alts){
+L.specific <- function(data, attrs, attr_coding, attr_level, alts, flag = NULL){
 
   # define the varibal "alt.name", otherwise when chect the package
   # there would be a NOTE.
@@ -65,82 +65,84 @@ L.specific <- function(data, attrs, attr_coding, attr_level, alts){
 
   # for alternative-specific attribute --------------------------------------
 
-  # This loop is to deal with alternative-specific attributes one by one
-  for(j in 1:length(attrs_alts)){
+  if(!is.null(asc)){
 
-    # get the number of values for jth attribute
-    Nattrs <- nrow(unique(attrs_alts[, j]))
+    # This loop is to deal with alternative-specific attributes one by one
+    for(j in 1:length(attrs_alts)){
 
-    # get the number of values 0 for jth attribute
-    # value 0 means the the corresponding alternative do not have jth attribute
-    Nattrs_0 <- nrow(attrs_alts[which(attrs_alts[, j] == 0), j])
+      # get the number of values for jth attribute
+      Nattrs <- nrow(unique(attrs_alts[, j]))
 
-    # If the number of value for jth attribute is 1, it means this attribute has
-    # generic parameter value.
-    if(Nattrs != 1){
+      # get the number of values 0 for jth attribute
+      # value 0 means the the corresponding alternative do not have jth attribute
+      Nattrs_0 <- nrow(attrs_alts[which(attrs_alts[, j] == 0), j])
 
-      for(i in 1:(Nattrs - sign(Nattrs_0))){
+      # If the number of value for jth attribute is 1, it means this attribute has
+      # generic parameter value.
+      if(Nattrs != 1){
 
-        # This "if" is for the categorical attribute that is already coded
-        if(names(attrs_alts[, j]) %in% names(attr_coding)){
+        for(i in 1:(Nattrs - sign(Nattrs_0))){
 
-          # get the number of coded level of jth attribute
-          Nlv <- length(attr_level[[names(attrs_alts[, j])]]) - 1
+          # This "if" is for the categorical attribute that is already coded
+          if(names(attrs_alts[, j]) %in% names(attr_coding)){
 
-          # generate the name of the coded level of jth attribute
-          lv_name <- stringr::str_c(names(attrs_alts[, j]), ".lv", seq(1, Nlv))
+            # get the number of coded level of jth attribute
+            Nlv <- length(attr_level[[names(attrs_alts[, j])]]) - 1
 
-          unique_attrs_alts <- unique(attrs_alts[, j])
-          unique_attrs_alts <- unique_attrs_alts[unique_attrs_alts != 0, ]
-          # get the names of alternatives that have a generic parameter
-          alts_same <- alts[which(attrs_alts[, j] ==
-                                    as.numeric(unique_attrs_alts[i, ]))]
+            # generate the name of the coded level of jth attribute
+            lv_name <- stringr::str_c(names(attrs_alts[, j]), ".lv", seq(1, Nlv))
 
-          # get the name for the new column for jth attribute
-          col_name <- stringr::str_c(lv_name,
-                                     stringr::str_c(alts_same, collapse = "."),
-                                     sep = ".")
+            unique_attrs_alts <- unique(attrs_alts[, j])
+            unique_attrs_alts <- unique_attrs_alts[unique_attrs_alts != 0, ]
+            # get the names of alternatives that have a generic parameter
+            alts_same <- alts[which(attrs_alts[, j] ==
+                                      as.numeric(unique_attrs_alts[i, ]))]
 
-          # code the jth attribute level by level
-          for(k in 1:Nlv){
+            # get the name for the new column for jth attribute
+            col_name <- stringr::str_c(lv_name,
+                                       stringr::str_c(alts_same, collapse = "."),
+                                       sep = ".")
 
-            # code the kth level for jth attribute
-            data_attr <- tibble::tibble(!!col_name[k] :=
-                                          (data[lv_name] *
-                                             (data$alt.name %in%
-                                                alts_same))[, k])
+            # code the jth attribute level by level
+            for(k in 1:Nlv){
+
+              # code the kth level for jth attribute
+              data_attr <- tibble::tibble(!!col_name[k] :=
+                                            (data[lv_name] *
+                                               (data$alt.name %in%
+                                                  alts_same))[, k])
+
+              # combined the coded data to the existed specific data part
+              data_specific <- dplyr::bind_cols(data_specific, data_attr)
+            }
+          }
+
+          # This "if" is for the continuous attribute
+          if(!(names(attrs_alts[, j]) %in% names(attr_coding))){
+
+            unique_attrs_alts <- unique(attrs_alts[, j])
+            unique_attrs_alts <- unique_attrs_alts[unique_attrs_alts != 0, ]
+            # get the names of alternatives that have a generic parameter
+            alts_same <- alts[which(attrs_alts[, j] ==
+                                      as.numeric(unique_attrs_alts[i, ]))]
+
+            # get the name for the new column for jth attribute
+            col_name <- stringr::str_c(names(attrs_alts[, j]),
+                                       stringr::str_c(alts_same, collapse = "."),
+                                       sep = ".")
+
+            # code the jth attribute
+            data_attr <- tibble::tibble(!!col_name :=
+                                          (data[names(attrs_alts[, j])] *
+                                             (data$alt.name %in% alts_same))[, 1])
 
             # combined the coded data to the existed specific data part
             data_specific <- dplyr::bind_cols(data_specific, data_attr)
           }
         }
-
-        # This "if" is for the continuous attribute
-        if(!(names(attrs_alts[, j]) %in% names(attr_coding))){
-
-          unique_attrs_alts <- unique(attrs_alts[, j])
-          unique_attrs_alts <- unique_attrs_alts[unique_attrs_alts != 0, ]
-          # get the names of alternatives that have a generic parameter
-          alts_same <- alts[which(attrs_alts[, j] ==
-                                    as.numeric(unique_attrs_alts[i, ]))]
-
-          # get the name for the new column for jth attribute
-          col_name <- stringr::str_c(names(attrs_alts[, j]),
-                                     stringr::str_c(alts_same, collapse = "."),
-                                     sep = ".")
-
-          # code the jth attribute
-          data_attr <- tibble::tibble(!!col_name :=
-                                        (data[names(attrs_alts[, j])] *
-                                        (data$alt.name %in% alts_same))[, 1])
-
-          # combined the coded data to the existed specific data part
-          data_specific <- dplyr::bind_cols(data_specific, data_attr)
-        }
       }
     }
   }
-
 
   # context attributes ------------------------------------------------------
 
@@ -158,7 +160,10 @@ L.specific <- function(data, attrs, attr_coding, attr_level, alts){
       # make sure context is not estimated using a generic parameter
       if(Ncontext == 1 & Ncontext_0 == 0){
 
-        stop("Impossible to estimate a genetric parameter of context variables!")
+        if(flag != "order"){
+
+          stop("Impossible to estimate a genetric parameter of context variables!")
+        }
       }
 
       if(Ncontext != 1){
