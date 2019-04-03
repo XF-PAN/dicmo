@@ -5,8 +5,9 @@
 \title{function to estimate ordered choice model}
 \usage{
 X.order(data, choice, rate, attrs, attr_coding = NULL,
-  attr_level = NULL, interact = NULL, method = "BFGS",
-  estimator = TRUE, param_fixed = NULL, param_start = NULL)
+  attr_level = NULL, interact = NULL, type = "logit",
+  method = "BFGS", estimator = TRUE, param_fixed = NULL,
+  param_start = NULL)
 }
 \arguments{
 \item{data}{A tibble, input data.}
@@ -42,6 +43,9 @@ relevent when argument "attr_coding" is not NULL. Default = NULL.}
 
 \item{interact}{A vector of character, name of attributes' interaction,
 connected by "*". Default = NULL.}
+
+\item{type}{A character, indicating which type of ordered model is used,
+either "logit" or "probit". Default = "logit".}
 
 \item{method}{A character, passed to the function maxLik() in "maxLik"
 package. It indicates the method used in maximum likelihood estimation.

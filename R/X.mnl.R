@@ -76,6 +76,8 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
                   method = "BFGS", estimator = TRUE,
                   param_fixed = NULL, param_start = NULL){
 
+  # data preparation --------------------------------------------------------
+
   # data preparation and return the data set can be used and the utility formula
   process_data <- L.data(data = data, choice = choice, alts = alts,
                          attrs = attrs, attr_coding = attr_coding,
@@ -87,8 +89,6 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
 
   # get the utiity formula
   utility <- process_data[[2]]
-
-  # model estimation --------------------------------------------------------
 
   df <- stats::model.frame(utility, data)
   y <- df[[1]]
@@ -102,7 +102,10 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
   Nalt <- length(alts)
   Nobs <- nrow(df) / Nalt
 
+  # update the 'avi' argument
   if(is.null(avi)) avi <- "alt.avi"
+
+  # model estimation --------------------------------------------------------
 
   cat("Estimation starts at:", date(), "\n")
   res <- maxLik::maxLik(logLik = logLik.mnl,

@@ -10,6 +10,7 @@ L.data <- function(data, choice, alts, attrs, attr_coding,
     attrs_alts_tbl <- NULL
     context_tbl <- NULL
 
+    # deal with alternative-specific attributes
     for(i in 1:length(attrs_alts)){
 
       attrs_name <- attrs_alts[i]
@@ -18,6 +19,7 @@ L.data <- function(data, choice, alts, attrs, attr_coding,
       attrs_alts_tbl <- dplyr::bind_cols(attrs_alts_tbl, attrs_alts_tbl_tmp)
     }
 
+    # deal with context variables
     if(!is.null(context)){
 
       for(i in 1:length(context)){
@@ -30,7 +32,6 @@ L.data <- function(data, choice, alts, attrs, attr_coding,
     }
 
     attrs <- list(attrs_alts = attrs_alts_tbl,
-                  asc = rep(0, length(alts)),
                   context = context_tbl)
   }
 

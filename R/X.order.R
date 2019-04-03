@@ -42,6 +42,9 @@
 #' @param interact A vector of character, name of attributes' interaction,
 #'     connected by "*". Default = NULL.
 #'
+#' @param type A character, indicating which type of ordered model is used,
+#'     either "logit" or "probit". Default = "logit".
+#'
 #' @param method A character, passed to the function maxLik() in "maxLik"
 #'     package. It indicates the method used in maximum likelihood estimation.
 #'     Default = "BFGS".
@@ -59,10 +62,13 @@
 #'
 
 X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
-                    attr_level = NULL, interact = NULL,
+                    attr_level = NULL, interact = NULL, type = "logit",
                     method = "BFGS", estimator = TRUE,
                     param_fixed = NULL, param_start = NULL){
 
+  # data preparation --------------------------------------------------------
+
+  # to add an extra row for each choice task
   rate <- c(rate, "pos.inf")
 
   # data preparation and return the data set can be used and the utility formula
@@ -77,16 +83,16 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   # get the utiity formula
   utility <- process_data[[2]]
 
-  # data process - thresholds -----------------------------------------------
-
+  # thresholds setting
   process_data <- L.order(data = data, rate = rate, choice = choice)
 
+  # update the data set by adding the thresholds
   data <- process_data[[1]]
 
+  # to get the threshold columns
   threshold <- process_data[[2]]
 
-  # model estimation --------------------------------------------------------
-
+  # manipulate the utility function
   df <- stats::model.frame(utility, data)
   y <- df[[1]]
   x <- as.matrix(df[, -1])
@@ -95,6 +101,7 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   beta <- rep(0, Nparam)
   names(beta) <- name_param
 
+  # manipulate the threshold function
   df <- stats::model.frame(threshold, data)
   x_thd <- as.matrix(df[, -1])
   name_param <- names(df[, -1])
@@ -103,7 +110,6 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   names(beta_thd) <- name_param
 
   param_fixed <- c(param_fixed, "thd.0", name_param[length(name_param)])
-
   beta <- c(beta, beta_thd)
 
   beta[names(param_start)] <- param_start
@@ -112,17 +118,37 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   Nobs <- nrow(df) / 2
   indicator <- rep(c(-1, 1), Nobs)
 
+  # model estimation --------------------------------------------------------
+
   cat("Estimation starts at:", date(), "\n")
-  res <- maxLik::maxLik(logLik = logLik.order.logis,
-                        start = beta,
-                        method = method,
-                        fixed = param_fixed,
-                        finalHessian = estimator,
-                        control = list(iterlim = 1000),
-                        attr = x, attr_thd = x_thd, choice = indicator,
-                        chid = chid,
-                        Nparam = Nparam, Nparam_all = length(beta))
+
+  if(type == "logit"){
+
+    res <- maxLik::maxLik(logLik = logLik.order,
+                          start = beta,
+                          method = method,
+                          fixed = param_fixed,
+                          finalHessian = estimator,
+                          control = list(iterlim = 1000),
+                          attr = x, attr_thd = x_thd, choice = indicator,
+                          chid = chid, fun = stats::plogis,
+                          Nparam = Nparam, Nparam_all = length(beta))
+  } else if(type == "probit"){
+
+    res <- maxLik::maxLik(logLik = logLik.order,
+                          start = beta,
+                          method = method,
+                          fixed = param_fixed,
+                          finalHessian = estimator,
+                          control = list(iterlim = 1000),
+                          attr = x, attr_thd = x_thd, choice = indicator,
+                          chid = chid, fun = stats::pnorm,
+                          Nparam = Nparam, Nparam_all = length(beta))
+  } else stop("Undefined model type!")
+
   cat("Estimation ends at:", date(), "\n")
+
+  # goodness of fit and return it -------------------------------------------
 
   L.gof(res = res, Nalt = Nalt, Nobs = Nobs,
         Nparam = length(beta) - length(param_fixed),
