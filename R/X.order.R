@@ -118,35 +118,30 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   Nobs <- nrow(df) / 2
   indicator <- rep(c(-1, 1), Nobs)
 
-  # model estimation --------------------------------------------------------
-
-  cat("Estimation starts at:", date(), "\n")
-
+  # get the model type
   if(type == "logit"){
 
-    res <- maxLik::maxLik(logLik = logLik.order,
-                          start = beta,
-                          method = method,
-                          fixed = param_fixed,
-                          finalHessian = estimator,
-                          control = list(iterlim = 1000),
-                          attr = x, attr_thd = x_thd, choice = indicator,
-                          chid = chid, fun = stats::plogis,
-                          Nparam = Nparam, Nparam_all = length(beta))
+    fun <- stats::plogis
+
   } else if(type == "probit"){
 
-    res <- maxLik::maxLik(logLik = logLik.order,
-                          start = beta,
-                          method = method,
-                          fixed = param_fixed,
-                          finalHessian = estimator,
-                          control = list(iterlim = 1000),
-                          attr = x, attr_thd = x_thd, choice = indicator,
-                          chid = chid, fun = stats::pnorm,
-                          Nparam = Nparam, Nparam_all = length(beta))
+    fun <- stats::pnorm
+
   } else stop("Undefined model type!")
 
-  cat("Estimation ends at:", date(), "\n")
+  # model estimation --------------------------------------------------------
+
+  cat(date(), "- model estimation starts\n")
+  res <- maxLik::maxLik(logLik = logLik.order,
+                        start = beta,
+                        method = method,
+                        fixed = param_fixed,
+                        finalHessian = estimator,
+                        control = list(iterlim = 1000),
+                        attr = x, attr_thd = x_thd, choice = indicator,
+                        chid = chid, fun = fun,
+                        Nparam = Nparam, Nparam_all = length(beta))
+  cat(date(), "- model estimation ends\n")
 
   # goodness of fit and return it -------------------------------------------
 

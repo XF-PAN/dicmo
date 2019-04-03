@@ -122,7 +122,7 @@ X.nl2 <- function(data, choice, alts, attrs, nest, nest_uni =TRUE,
 
   # model estimation --------------------------------------------------------
 
-  cat("Estimation starts at:", date(), "\n")
+  cat(date(), "- model estimation starts\n")
   res <- maxLik::maxLik(logLik = logLik.nl2,
                         start = beta,
                         method = method,
@@ -135,7 +135,7 @@ X.nl2 <- function(data, choice, alts, attrs, nest, nest_uni =TRUE,
                         nest.choice = nest.prop[['nest.choice']],
                         nest.id = nest.prop[['nest.id']],
                         nest.group = nest.prop[['nest.group']])
-  cat("Estimation ends at:", date(), "\n")
+  cat(date(), "- model estimation ends\n")
 
   # goodness of fit and return it -------------------------------------------
 

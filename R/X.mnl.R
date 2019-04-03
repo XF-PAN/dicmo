@@ -107,7 +107,7 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
 
   # model estimation --------------------------------------------------------
 
-  cat("Estimation starts at:", date(), "\n")
+  cat(date(), "- model estimation starts\n")
   res <- maxLik::maxLik(logLik = logLik.mnl,
                         start = beta,
                         method = method,
@@ -116,7 +116,7 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
                         control = list(iterlim = 1000),
                         attr = x, choice = y, chid = chid,
                         avi = as.matrix(data[avi]))
-  cat("Estimation ends at:", date(), "\n")
+  cat(date(), "- model estimation ends\n")
 
   # goodness of fit and return it -------------------------------------------
 
