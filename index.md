@@ -14,6 +14,6 @@ have one-to-one correspondence in sequence.
 * Highly recommend to always include the alternative-available column, i.e. the
 "avi" argument.
 * Highly recommend to first estimate the model without setting anything for the argument "interact", "param_start" and "param_fixed" to know the names of estimated parameters, then set these arguments if it is needed.
-* The argument "attrs" in could only have one element "attrs_alts", and the sequence of the elements does not matter.
+* The argument "attrs" could only have one element "attrs_alts", and the sequence of the elements does not matter.
 * For ordered choice model, the argument "attrs" has no "asc" element.
-* For ordered choice model, the elements in the argument "rate" must ordered from the worst to the best.
+* For ordered choice model, the elements in the argument "rate" must be sorted from the worst to the best.
