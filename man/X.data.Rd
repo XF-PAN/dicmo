@@ -5,7 +5,7 @@
 \title{function to data manipulation for model estimation}
 \usage{
 X.data(data, choice, alts, attrs, attr_coding = NULL,
-  attr_level = NULL, interact = NULL, avi = NULL)
+  attr_level = NULL, avi = NULL, interact = NULL, flag = "nomial")
 }
 \arguments{
 \item{data}{A tibble, input data, wide format.}
@@ -39,9 +39,6 @@ all categorical attributes. The first element of a vector is set as base
 level, others are set as 1, 2, 3...in sequence. This argument is only
 relevent when argument "attr_coding" is not NULL. Default = NULL.}
 
-\item{interact}{A vector of character, name of attributes' interaction,
-connected by "*". Default = NULL.}
-
 \item{avi}{A character, name of column indicating if an alternative is
 available to individuals. Default = NULL, indicating all alternatives are
 available to all respondents. Each alternative should have such a column,
@@ -50,6 +47,12 @@ for example, avi = "available" then the column's name for an alternative
 "car:avilable". If this parameter is NULL, then those columns are not
 necessary. If this parameter is not NULL, then in such as column, the
 element should be 0 if the alternative is not available otherwise 1.}
+
+\item{interact}{A vector of character, name of attributes' interaction,
+connected by "*". Default = NULL.}
+
+\item{flag}{A character, indicating the choice alternatives are nomial or
+ordered. Default = "nomial".}
 }
 \description{
 This function help to prepare data for model estimation.

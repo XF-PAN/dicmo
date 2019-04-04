@@ -51,15 +51,19 @@
 #'     necessary. If this parameter is not NULL, then in such as column, the
 #'     element should be 0 if the alternative is not available otherwise 1.
 #'
+#' @param flag A character, indicating the choice alternatives are nomial or
+#'     ordered. Default = "nomial".
+#'
 
 X.data <- function(data, choice, alts, attrs, attr_coding = NULL,
-                  attr_level = NULL, interact = NULL, avi = NULL){
+                  attr_level = NULL, avi = NULL, interact = NULL,
+                  flag = "nomial"){
 
   # data preparation and return the data set can be used and the utility formula
   process_data <- L.data(data = data, choice = choice, alts = alts,
                          attrs = attrs, attr_coding = attr_coding,
                          attr_level = attr_level, interact = interact,
-                         avi = avi)
+                         avi = avi, flag = flag)
 
   # get the data set
   data <- process_data[[1]]
