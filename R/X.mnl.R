@@ -98,7 +98,7 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
   beta <- rep(0, Nparam)
   names(beta) <- name_param
   beta[names(param_start)] <- param_start
-  chid <- factor(data$obs.id)
+  chid <- data$obs.id
   Nalt <- length(alts)
   Nobs <- nrow(df) / Nalt
 
@@ -107,7 +107,8 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
 
   # model estimation --------------------------------------------------------
 
-  cat(date(), "- model estimation starts\n")
+  start_time <- Sys.time()
+  cat(as.character(start_time), "- model estimation starts\n")
   res <- maxLik::maxLik(logLik = logLik.mnl,
                         start = beta,
                         method = method,
@@ -116,12 +117,15 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
                         control = list(iterlim = 1000),
                         attr = x, choice = y, chid = chid,
                         avi = as.matrix(data[avi]))
-  cat(date(), "- model estimation ends\n")
+  end_time <- Sys.time()
+  cat(as.character(end_time), "- model estimation ends\n")
 
   # goodness of fit and return it -------------------------------------------
 
   L.gof(res = res, Nalt = Nalt, Nobs = Nobs,
         Nparam = length(beta) - length(param_fixed),
         param_fixed = param_fixed, avi = as.matrix(data[avi]),
-        chid = chid)
+        chid = chid,
+        name = "logit",
+        start_time = start_time, end_time = end_time)
 }

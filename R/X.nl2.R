@@ -105,7 +105,7 @@ X.nl2 <- function(data, choice, alts, attrs, nest, nest_uni =TRUE,
   Nparam <- length(name_param)
   beta <- rep(0, Nparam)
   names(beta) <- name_param
-  chid <- factor(data$obs.id)
+  chid <- data$obs.id
   Nalt <- length(alts)
   Nobs <- nrow(df) / Nalt
 
@@ -122,7 +122,8 @@ X.nl2 <- function(data, choice, alts, attrs, nest, nest_uni =TRUE,
 
   # model estimation --------------------------------------------------------
 
-  cat(date(), "- model estimation starts\n")
+  start_time <- Sys.time()
+  cat(as.character(start_time), "- model estimation starts\n")
   res <- maxLik::maxLik(logLik = logLik.nl2,
                         start = beta,
                         method = method,
@@ -135,12 +136,15 @@ X.nl2 <- function(data, choice, alts, attrs, nest, nest_uni =TRUE,
                         nest.choice = nest.prop[['nest.choice']],
                         nest.id = nest.prop[['nest.id']],
                         nest.group = nest.prop[['nest.group']])
-  cat(date(), "- model estimation ends\n")
+  end_time <- Sys.time()
+  cat(as.character(end_time), "- model estimation ends\n")
 
   # goodness of fit and return it -------------------------------------------
 
   L.gof(res = res, Nalt = Nalt, Nobs = Nobs,
         Nparam = length(beta) - length(param_fixed),
         param_fixed = param_fixed, avi = as.matrix(data[avi]),
-        chid = chid)
+        chid = chid,
+        name = "2-level nested logit",
+        start_time = start_time, end_time = end_time)
 }

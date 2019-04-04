@@ -113,7 +113,7 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   beta <- c(beta, beta_thd)
 
   beta[names(param_start)] <- param_start
-  chid <- factor(data$obs.id)
+  chid <- data$obs.id
   Nalt <- length(rate) - 1
   Nobs <- nrow(df) / 2
   indicator <- rep(c(-1, 1), Nobs)
@@ -131,7 +131,8 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
 
   # model estimation --------------------------------------------------------
 
-  cat(date(), "- model estimation starts\n")
+  start_time <- Sys.time()
+  cat(as.character(start_time), "- model estimation starts\n")
   res <- maxLik::maxLik(logLik = logLik.order,
                         start = beta,
                         method = method,
@@ -141,11 +142,15 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
                         attr = x, attr_thd = x_thd, choice = indicator,
                         chid = chid, fun = fun,
                         Nparam = Nparam, Nparam_all = length(beta))
-  cat(date(), "- model estimation ends\n")
+  end_time <- Sys.time()
+  cat(as.character(end_time), "- model estimation ends\n")
 
   # goodness of fit and return it -------------------------------------------
 
   L.gof(res = res, Nalt = Nalt, Nobs = Nobs,
         Nparam = length(beta) - length(param_fixed),
-        param_fixed = param_fixed, flag = "order")
+        param_fixed = param_fixed,
+        name = paste("ordered", type, sep = " "),
+        flag = "order",
+        start_time = start_time, end_time = end_time)
 }

@@ -1,5 +1,6 @@
 L.gof <- function(res, Nalt, Nobs, Nparam, param_fixed,
-                  avi = NULL, chid = NULL, flag = "nomial"){
+                  avi = NULL, chid = NULL, name, flag = "nomial",
+                  start_time, end_time){
 
   if(!is.null(param_fixed)){
 
@@ -30,6 +31,8 @@ L.gof <- function(res, Nalt, Nobs, Nparam, param_fixed,
   AIC <- 2 * Nparam - 2 * res$maximum
   BIC <- log(Nobs) * Nparam - 2 * res$maximum
 
+  time_use <-
+
   results <- list(Hessian = hessian_mrx,
                   Estimate = round(estimate, 6),
                   std_err = round(se, 6),
@@ -42,7 +45,12 @@ L.gof <- function(res, Nalt, Nobs, Nparam, param_fixed,
                   Sample_Size = Nobs,
                   Parameter_Number = Nparam,
                   AIC = round(AIC, 4),
-                  BIC = round(BIC, 4))
+                  BIC = round(BIC, 4),
+                  Type = res$type,
+                  Message = res$message,
+                  Name = name,
+                  start_time = start_time,
+                  end_time = end_time)
   class(results) <- "dicmo"
 
   return(results)
