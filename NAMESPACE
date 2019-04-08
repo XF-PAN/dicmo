@@ -2,7 +2,7 @@
 
 S3method(summary,dicmo)
 export(X.data)
-export(X.mnl)
+export(X.logit)
 export(X.nl2)
 export(X.order)
 importFrom(rlang,":=")

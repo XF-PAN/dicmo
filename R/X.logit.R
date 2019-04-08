@@ -8,7 +8,7 @@
 #'     interaction effects between attributes and alternative-specific
 #'     parameters.
 #'
-#' @export X.mnl
+#' @export X.logit
 #'
 #' @importFrom rlang :=
 #'
@@ -71,10 +71,10 @@
 #'     Default = NULL.
 #'
 
-X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
-                  attr_level = NULL, interact = NULL, avi = NULL,
-                  method = "BFGS", estimator = TRUE,
-                  param_fixed = NULL, param_start = NULL){
+X.logit <- function(data, choice, alts, attrs, attr_coding = NULL,
+                    attr_level = NULL, interact = NULL, avi = NULL,
+                    method = "BFGS", estimator = TRUE,
+                    param_fixed = NULL, param_start = NULL){
 
   # data preparation --------------------------------------------------------
 
@@ -109,7 +109,7 @@ X.mnl <- function(data, choice, alts, attrs, attr_coding = NULL,
 
   start_time <- Sys.time()
   cat(as.character(start_time), "- model estimation starts\n")
-  res <- maxLik::maxLik(logLik = logLik.mnl,
+  res <- maxLik::maxLik(logLik = logLik.logit,
                         start = beta,
                         method = method,
                         fixed = param_fixed,
