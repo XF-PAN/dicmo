@@ -6,8 +6,9 @@ Date: 2019-04-10
 Author: X.PAN
 Maintainer: X.PAN <ixavier@aliyun.com>
 Description: Estimation of various discrete choice models. For dicmo 0.1.0,
-    multinomial logit, 2-level nested logit, ordered logit/probit and exploded
-    logit model (including BW3) are available.
+    multinomial logit, nested logit, ordered logit/probit and exploded
+    logit/nested model (including best-worst scaling) are available. Note by
+    saying "nested", it refers in particular to 2-level nested.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

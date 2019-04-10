@@ -47,6 +47,16 @@
 #' @param interact A vector of character, name of attributes' interaction,
 #'     connected by "*". Default = NULL.
 #'
+#' @param type A character, indicating which type of ordered model is used,
+#'     either "logit" or "nl2". Default = "logit".
+#'
+#' @param nest A list, indicating how many nests at all and which alternatives
+#'     are in the same nest.
+#'
+#' @param nest_uni A logical, indicating if the inclusive values for the nests
+#'     are the same or not. Default = TRUE, means the inclusive values are the
+#'     same.
+#'
 #' @param bw A logical, if TRUE, then BWS case 3 is estimated, otherwise the
 #'     complete rank is used. Default = FALSE.
 #'
@@ -81,6 +91,7 @@
 
 X.explode <- function(data, choice, alts, attrs, attr_coding = NULL,
                       attr_level = NULL, interact = NULL,
+                      type = "logit", nest, nest_uni =TRUE,
                       bw = FALSE, scale = FALSE, avi = NULL,
                       method = "BFGS", estimator = TRUE,
                       param_fixed = NULL, param_start = NULL){
@@ -116,42 +127,94 @@ X.explode <- function(data, choice, alts, attrs, attr_coding = NULL,
   # get the utiity formula
   utility <- process_data[[2]]
 
+  if(type == "logit"){
 
-  df <- stats::model.frame(utility, data)
-  y <- df[[1]]
-  x <- as.matrix(df[, -1])
-  name_param <- names(df[, -1])
-  Nparam <- length(name_param)
-  beta <- rep(0, Nparam)
-  names(beta) <- name_param
-  beta[names(param_start)] <- param_start
-  chid <- data$obs.id
-  Nalt <- length(alts)
-  Nobs <- nrow(df) / Nalt
+    df <- stats::model.frame(utility, data)
+    y <- df[[1]]
+    x <- as.matrix(df[, -1])
+    name_param <- names(df[, -1])
+    Nparam <- length(name_param)
+    beta <- rep(0, Nparam)
+    names(beta) <- name_param
+    beta[names(param_start)] <- param_start
+    chid <- data$obs.id
+    Nalt <- length(alts)
+    Nobs <- nrow(df) / Nalt
 
-  if(bw){
+    if(bw){
 
-    x[((nrow(x)  / 2 + 1):nrow(x)), ] <- -x[((nrow(x)  / 2 + 1):nrow(x)), ]
+      x[((nrow(x)  / 2 + 1):nrow(x)), ] <- -x[((nrow(x)  / 2 + 1):nrow(x)), ]
 
-    model_name <- "best-worst scaling case 3"
-  } else {
-    model_name <- "exploded logit"
+      model_name <- "exploded logit (best-worst only)"
+    } else {
+      model_name <- "exploded logit"
+    }
+
+    # model estimation --------------------------------------------------------
+
+    start_time <- Sys.time()
+    cat(as.character(start_time), "- model estimation starts\n")
+    res <- maxLik::maxLik(logLik = logLik.logit,
+                          start = beta,
+                          method = method,
+                          fixed = param_fixed,
+                          finalHessian = estimator,
+                          control = list(iterlim = 1000),
+                          attr = x, choice = y, chid = chid,
+                          avi = as.matrix(data[avi]))
+    end_time <- Sys.time()
+    cat(as.character(end_time), "- model estimation ends\n")
+
+  } else if(type == "nl2"){
+
+    df <- stats::model.frame(utility, data)
+    y <- df[[1]]
+    x <- as.matrix(df[, -1])
+    name_param <- names(df[, -1])
+    Nparam <- length(name_param)
+    beta <- rep(0, Nparam)
+    names(beta) <- name_param
+    chid <- data$obs.id
+    Nalt <- length(alts)
+    Nobs <- nrow(df) / Nalt
+
+    # nest structure setting
+    nest.prop <- L.nest(data = data, nest = nest, choice = "expld.ch",
+                        nest_uni = nest_uni, Nalt = Nalt, beta = beta)
+
+    # initialize the start value of beta
+    beta <- nest.prop[['beta']]
+    beta[names(param_start)] <- param_start
+
+    if(bw){
+
+      x[((nrow(x)  / 2 + 1):nrow(x)), ] <- -x[((nrow(x)  / 2 + 1):nrow(x)), ]
+
+      model_name <- "exploded 2-level nested logit (best-worst only)"
+    } else {
+      model_name <- "exploded 2-level nested logit"
+    }
+
+    # model estimation --------------------------------------------------------
+
+    start_time <- Sys.time()
+    cat(as.character(start_time), "- model estimation starts\n")
+    res <- maxLik::maxLik(logLik = logLik.nl2,
+                          start = beta,
+                          method = method,
+                          fixed = param_fixed,
+                          finalHessian = estimator,
+                          control = list(iterlim = 1000),
+                          attr = x, choice = y, chid = chid,
+                          avi = as.matrix(data[avi]),
+                          nest.alt = nest.prop[['nest.alt']],
+                          nest.choice = nest.prop[['nest.choice']],
+                          nest.id = nest.prop[['nest.id']],
+                          nest.group = nest.prop[['nest.group']])
+    end_time <- Sys.time()
+    cat(as.character(end_time), "- model estimation ends\n")
+
   }
-
-  # model estimation --------------------------------------------------------
-
-  start_time <- Sys.time()
-  cat(as.character(start_time), "- model estimation starts\n")
-  res <- maxLik::maxLik(logLik = logLik.logit,
-                        start = beta,
-                        method = method,
-                        fixed = param_fixed,
-                        finalHessian = estimator,
-                        control = list(iterlim = 1000),
-                        attr = x, choice = y, chid = chid,
-                        avi = as.matrix(data[avi]))
-  end_time <- Sys.time()
-  cat(as.character(end_time), "- model estimation ends\n")
 
   # goodness of fit and return it -------------------------------------------
 

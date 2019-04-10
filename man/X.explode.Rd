@@ -5,9 +5,10 @@
 \title{function to estimate exploded logit/probit model, including BWS case 3}
 \usage{
 X.explode(data, choice, alts, attrs, attr_coding = NULL,
-  attr_level = NULL, interact = NULL, bw = FALSE, scale = FALSE,
-  avi = NULL, method = "BFGS", estimator = TRUE,
-  param_fixed = NULL, param_start = NULL)
+  attr_level = NULL, interact = NULL, type = "logit", nest,
+  nest_uni = TRUE, bw = FALSE, scale = FALSE, avi = NULL,
+  method = "BFGS", estimator = TRUE, param_fixed = NULL,
+  param_start = NULL)
 }
 \arguments{
 \item{data}{A tibble, input data, wide format.}
@@ -44,6 +45,16 @@ relevent when argument "attr_coding" is not NULL. Default = NULL.}
 
 \item{interact}{A vector of character, name of attributes' interaction,
 connected by "*". Default = NULL.}
+
+\item{type}{A character, indicating which type of ordered model is used,
+either "logit" or "nl2". Default = "logit".}
+
+\item{nest}{A list, indicating how many nests at all and which alternatives
+are in the same nest.}
+
+\item{nest_uni}{A logical, indicating if the inclusive values for the nests
+are the same or not. Default = TRUE, means the inclusive values are the
+same.}
 
 \item{bw}{A logical, if TRUE, then BWS case 3 is estimated, otherwise the
 complete rank is used. Default = FALSE.}
