@@ -1,4 +1,4 @@
-updated at 2019-04-03  
+updated at 2019-04-10  
 
 ## What is dicmo?
 *dicmo* is an R package for estimating various discrete choice models. In addition, it provides some useful functions to manipulate data before estimating the model. The current version of *dicmo* is 0.1.0.
@@ -22,6 +22,7 @@ updated at 2019-04-03
   * report various goodness of fit, i.e. initial log-likelihood, convergent log-likelihood, AIC, BIC, Rho-squared, and adjusted Rho-squared
 * 2-level nested logit model estimation using maximum likelihood approach
 * ordered logit/probit model estimation using maximum likelihood approach
+* exploded (2-level nested) logit model, including best-worst scaling case 3 
 
 ## How to install dicmo?
 * first make sure the *devtools* package is installed and loaded:  
