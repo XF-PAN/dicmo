@@ -1,19 +1,24 @@
-#' @title function to estimate ordered choice model
+#' @title function to estimate exploded logit/probit model, including BWS case 3
 #'
 #' @author X.PAN
 #'
-#' @description estimate ordered choice model
+#' @description This function could estimate multinomial logit model along with
+#'     converting the data from a wide format to a long format and code the
+#'     categorical attributesallow allow. In detail, it allows to estimate
+#'     interaction effects between attributes and alternative-specific
+#'     parameters.
 #'
-#' @export X.order
+#' @export X.explode
 #'
 #' @importFrom rlang :=
 #'
-#' @param data A tibble, input data.
+#' @param data A tibble, input data, wide format.
 #'
-#' @param choice A character, name of column indicating individuals' rate.
+#' @param choice A vector of character, name of column indicating individuals'
+#'     choices from the most to the worst - the order matters!
 #'
-#' @param rate A vector of characters, the scale that used ot rate an
-#'     alternative.
+#' @param alts A vector of characters, names of all alternatives, including
+#'     the none-option if any.
 #'
 #' @param attrs A list contains three slices, whose elements have to be non-
 #'     negative integers. The first one is a tibble, named "attrs_alts",
@@ -42,8 +47,21 @@
 #' @param interact A vector of character, name of attributes' interaction,
 #'     connected by "*". Default = NULL.
 #'
-#' @param type A character, indicating which type of ordered model is used,
-#'     either "ologit" or "oprobit". Default = "ologit".
+#' @param bw A logical, if TRUE, then BWS case 3 is estimated, otherwise the
+#'     complete rank is used. Default = FALSE.
+#'
+#' @param scale, A logical, if TRUE, alternative-specific scale parametes are
+#'     estimated, otherwise it is fixed to 1. Note only alternative-specific
+#'     scale parameters are allowed. DEfault = FASLE.
+#'
+#' @param avi A character, name of column indicating if an alternative is
+#'     available to individuals. Default = NULL, indicating all alternatives are
+#'     available to all respondents. Each alternative should have such a column,
+#'     for example, avi = "available" then the column's name for an alternative
+#'     (e.g. the alternative's name is "car") should be "available:car" or
+#'     "car:avilable". If this parameter is NULL, then those columns are not
+#'     necessary. If this parameter is not NULL, then in such as column, the
+#'     element should be 0 if the alternative is not available otherwise 1.
 #'
 #' @param method A character, passed to the function maxLik() in "maxLik"
 #'     package. It indicates the method used in maximum likelihood estimation.
@@ -61,21 +79,21 @@
 #'     Default = NULL.
 #'
 
-X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
-                    attr_level = NULL, interact = NULL, type = "ologit",
-                    method = "BFGS", estimator = TRUE,
-                    param_fixed = NULL, param_start = NULL){
+X.explode <- function(data, choice, alts, attrs, attr_coding = NULL,
+                      attr_level = NULL, interact = NULL,
+                      bw = FALSE, scale = FALSE, avi = NULL,
+                      method = "BFGS", estimator = TRUE,
+                      param_fixed = NULL, param_start = NULL){
+
+  Sample_Size <- nrow(data)
 
   # data preparation --------------------------------------------------------
 
-  # to add an extra row for each choice task
-  rate <- c(rate, "pos.inf")
-
   # data preparation and return the data set can be used and the utility formula
-  process_data <- L.data(data = data, choice = choice, alts = rate,
+  process_data <- L.data(data = data, choice = choice, alts = alts,
                          attrs = attrs, attr_coding = attr_coding,
                          attr_level = attr_level, interact = interact,
-                         avi = NULL, flag = "order")
+                         avi = avi)
 
   # get the data set
   data <- process_data[[1]]
@@ -83,16 +101,22 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   # get the utiity formula
   utility <- process_data[[2]]
 
-  # thresholds setting
-  process_data <- L.order(data = data, rate = rate, choice = choice)
 
-  # update the data set by adding the thresholds
+  # data process - explode the data set -------------------------------------
+
+  # update the 'avi' argument
+  if(is.null(avi)) avi <- "alt.avi"
+
+  process_data <- L.explode(data = data, choice = choice, avi = avi,
+                            bw = bw, utility = utility)
+
+  # get the data set
   data <- process_data[[1]]
 
-  # to get the threshold columns
-  threshold <- process_data[[2]]
+  # get the utiity formula
+  utility <- process_data[[2]]
 
-  # manipulate the utility function
+
   df <- stats::model.frame(utility, data)
   y <- df[[1]]
   x <- as.matrix(df[, -1])
@@ -100,59 +124,45 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   Nparam <- length(name_param)
   beta <- rep(0, Nparam)
   names(beta) <- name_param
-
-  # manipulate the threshold function
-  df <- stats::model.frame(threshold, data)
-  x_thd <- as.matrix(df[, -1])
-  name_param <- names(df[, -1])
-  Nparam_thd <- length(name_param)
-  beta_thd <- seq(1, Nparam_thd)
-  names(beta_thd) <- name_param
-
-  param_fixed <- c(param_fixed, "thd.0", name_param[length(name_param)])
-  beta <- c(beta, beta_thd)
-
   beta[names(param_start)] <- param_start
   chid <- data$obs.id
-  Nalt <- length(rate) - 1
-  Nobs <- nrow(df) / 2
-  indicator <- rep(c(-1, 1), Nobs)
+  Nalt <- length(alts)
+  Nobs <- nrow(df) / Nalt
 
-  # get the model type
-  if(type == "ologit"){
+  if(bw){
 
-    fun <- stats::plogis
-    type <- "logit"
+    x[((nrow(x)  / 2 + 1):nrow(x)), ] <- -x[((nrow(x)  / 2 + 1):nrow(x)), ]
 
-  } else if(type == "oprobit"){
-
-    fun <- stats::pnorm
-    type <- "probit"
-
-  } else stop("Undefined model type!")
+    model_name <- "best-worst scaling case 3"
+  } else {
+    model_name <- "exploded logit"
+  }
 
   # model estimation --------------------------------------------------------
 
   start_time <- Sys.time()
   cat(as.character(start_time), "- model estimation starts\n")
-  res <- maxLik::maxLik(logLik = logLik.order,
+  res <- maxLik::maxLik(logLik = logLik.logit,
                         start = beta,
                         method = method,
                         fixed = param_fixed,
                         finalHessian = estimator,
                         control = list(iterlim = 1000),
-                        attr = x, attr_thd = x_thd, choice = indicator,
-                        chid = chid, fun = fun,
-                        Nparam = Nparam, Nparam_all = length(beta))
+                        attr = x, choice = y, chid = chid,
+                        avi = as.matrix(data[avi]))
   end_time <- Sys.time()
   cat(as.character(end_time), "- model estimation ends\n")
 
   # goodness of fit and return it -------------------------------------------
 
-  L.gof(res = res, Nalt = Nalt, Nobs = Nobs,
-        Nparam = length(beta) - length(param_fixed),
-        param_fixed = param_fixed,
-        name = paste("ordered", type, sep = " "),
-        flag = "order",
-        start_time = start_time, end_time = end_time)
+  res <- L.gof(res = res, Nalt = Nalt, Nobs = Nobs,
+               Nparam = length(beta) - length(param_fixed),
+               param_fixed = param_fixed, avi = as.matrix(data[avi]),
+               chid = chid,
+               name = model_name,
+               start_time = start_time, end_time = end_time)
+
+  res$Sample_Size <- Sample_Size
+
+  return(res)
 }

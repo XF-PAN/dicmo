@@ -71,7 +71,12 @@ L.wide2long <- function(data, choice, alts, avi = NULL){
 
   # Re-set the "alt.name" columne as logic values to indicate if the
   # alternative is chosen.
-  data_wide[choice] <- data_wide[choice] == data_wide["alt.name"]
+
+  for(i in 1:length(choice)){
+
+    data_wide[choice[i]] <- data_wide[choice[i]] == data_wide["alt.name"]
+  }
+
 
   # Return the long-format data set.
   return(data_wide)

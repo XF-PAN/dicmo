@@ -49,7 +49,7 @@ L.nest <- function(data, nest, choice, nest_uni, Nalt, beta){
 
   nest.prop <- list(nest.alt = data$nest.alt,
                     nest.choice = nest.choice,
-                    nest.id = nest.id,
-                    nest.group = nest.group,
+                    nest.id = as.numeric(factor(nest.id)),
+                    nest.group = as.numeric(factor(nest.group)),
                     beta = beta)
 }

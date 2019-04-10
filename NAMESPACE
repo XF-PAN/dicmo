@@ -2,6 +2,7 @@
 
 S3method(summary,dicmo)
 export(X.data)
+export(X.explode)
 export(X.logit)
 export(X.nl2)
 export(X.order)
