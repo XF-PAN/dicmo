@@ -84,48 +84,9 @@ X.logit <- function(data, choice, alts, attrs, attr_coding = NULL,
                          attr_level = attr_level, interact = interact,
                          avi = avi)
 
-  # get the data set
-  data <- process_data[[1]]
+  # model estimation
+  E.logit(process_data = process_data,
+          param_start = param_start, alts = alts, avi = avi,
+          method = method, param_fixed = param_fixed, estimator = estimator)
 
-  # get the utiity formula
-  utility <- process_data[[2]]
-
-  df <- stats::model.frame(utility, data)
-  y <- df[[1]]
-  x <- as.matrix(df[, -1])
-  name_param <- names(df[, -1])
-  Nparam <- length(name_param)
-  beta <- rep(0, Nparam)
-  names(beta) <- name_param
-  beta[names(param_start)] <- param_start
-  chid <- data$obs.id
-  Nalt <- length(alts)
-  Nobs <- nrow(df) / Nalt
-
-  # update the 'avi' argument
-  if(is.null(avi)) avi <- "alt.avi"
-
-  # model estimation --------------------------------------------------------
-
-  start_time <- Sys.time()
-  cat(as.character(start_time), "- model estimation starts\n")
-  res <- maxLik::maxLik(logLik = logLik.logit,
-                        start = beta,
-                        method = method,
-                        fixed = param_fixed,
-                        finalHessian = estimator,
-                        control = list(iterlim = 1000),
-                        attr = x, choice = y, chid = chid,
-                        avi = as.matrix(data[avi]))
-  end_time <- Sys.time()
-  cat(as.character(end_time), "- model estimation ends\n")
-
-  # goodness of fit and return it -------------------------------------------
-
-  L.gof(res = res, Nalt = Nalt, Nobs = Nobs,
-        Nparam = length(beta) - length(param_fixed),
-        param_fixed = param_fixed, avi = as.matrix(data[avi]),
-        chid = chid,
-        name = "logit",
-        start_time = start_time, end_time = end_time)
 }

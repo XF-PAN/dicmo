@@ -23,6 +23,9 @@ summary.dicmo <- function(object, ...){
   res$signif.[which(object$p_value <= 0.1 & object$p_value > 0.05)] <- "*"
   names(res) <- c("estimate", "std. error", "t-value", "p-value", "")
 
+  res[object$param_fixed, c(-1, -ncol(res))] <- NA
+  res[object$param_fixed, ncol(res)] <- " "
+
   cat("---------------------------------------------------------", "\n")
   cat("Model name:", object$Name, "\n")
   cat("Model estimation starts at:", as.character(object$start_time), "\n")

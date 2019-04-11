@@ -96,9 +96,8 @@ X.explode <- function(data, choice, alts, attrs, attr_coding = NULL,
                       method = "BFGS", estimator = TRUE,
                       param_fixed = NULL, param_start = NULL){
 
+  # get the sample size
   Sample_Size <- nrow(data)
-
-  # data preparation --------------------------------------------------------
 
   # data preparation and return the data set can be used and the utility formula
   process_data <- L.data(data = data, choice = choice, alts = alts,
@@ -112,120 +111,35 @@ X.explode <- function(data, choice, alts, attrs, attr_coding = NULL,
   # get the utiity formula
   utility <- process_data[[2]]
 
-
-  # data process - explode the data set -------------------------------------
-
   # update the 'avi' argument
   if(is.null(avi)) avi <- "alt.avi"
 
+  # explode the data set
   process_data <- L.explode(data = data, choice = choice, avi = avi,
                             bw = bw, utility = utility)
 
-  # get the data set
-  data <- process_data[[1]]
-
-  # get the utiity formula
-  utility <- process_data[[2]]
-
+  # model estimation
   if(type == "logit"){
 
-    df <- stats::model.frame(utility, data)
-    y <- df[[1]]
-    x <- as.matrix(df[, -1])
-    name_param <- names(df[, -1])
-    Nparam <- length(name_param)
-    beta <- rep(0, Nparam)
-    names(beta) <- name_param
-    beta[names(param_start)] <- param_start
-    chid <- data$obs.id
-    Nalt <- length(alts)
-    Nobs <- nrow(df) / Nalt
-
-    if(bw){
-
-      x[((nrow(x)  / 2 + 1):nrow(x)), ] <- -x[((nrow(x)  / 2 + 1):nrow(x)), ]
-
-      model_name <- "exploded logit (best-worst only)"
-    } else {
-      model_name <- "exploded logit"
-    }
-
-    # model estimation --------------------------------------------------------
-
-    start_time <- Sys.time()
-    cat(as.character(start_time), "- model estimation starts\n")
-    res <- maxLik::maxLik(logLik = logLik.logit,
-                          start = beta,
-                          method = method,
-                          fixed = param_fixed,
-                          finalHessian = estimator,
-                          control = list(iterlim = 1000),
-                          attr = x, choice = y, chid = chid,
-                          avi = as.matrix(data[avi]))
-    end_time <- Sys.time()
-    cat(as.character(end_time), "- model estimation ends\n")
+    res <- E.logit(process_data = process_data, bw = bw,
+                   param_start = param_start, alts = alts, avi = avi,
+                   method = method, param_fixed = param_fixed,
+                   estimator = estimator)
 
   } else if(type == "nl2"){
 
-    df <- stats::model.frame(utility, data)
-    y <- df[[1]]
-    x <- as.matrix(df[, -1])
-    name_param <- names(df[, -1])
-    Nparam <- length(name_param)
-    beta <- rep(0, Nparam)
-    names(beta) <- name_param
-    chid <- data$obs.id
-    Nalt <- length(alts)
-    Nobs <- nrow(df) / Nalt
-
-    # nest structure setting
-    nest.prop <- L.nest(data = data, nest = nest, choice = "expld.ch",
-                        nest_uni = nest_uni, Nalt = Nalt, beta = beta)
-
-    # initialize the start value of beta
-    beta <- nest.prop[['beta']]
-    beta[names(param_start)] <- param_start
-
-    if(bw){
-
-      x[((nrow(x)  / 2 + 1):nrow(x)), ] <- -x[((nrow(x)  / 2 + 1):nrow(x)), ]
-
-      model_name <- "exploded 2-level nested logit (best-worst only)"
-    } else {
-      model_name <- "exploded 2-level nested logit"
-    }
-
-    # model estimation --------------------------------------------------------
-
-    start_time <- Sys.time()
-    cat(as.character(start_time), "- model estimation starts\n")
-    res <- maxLik::maxLik(logLik = logLik.nl2,
-                          start = beta,
-                          method = method,
-                          fixed = param_fixed,
-                          finalHessian = estimator,
-                          control = list(iterlim = 1000),
-                          attr = x, choice = y, chid = chid,
-                          avi = as.matrix(data[avi]),
-                          nest.alt = nest.prop[['nest.alt']],
-                          nest.choice = nest.prop[['nest.choice']],
-                          nest.id = nest.prop[['nest.id']],
-                          nest.group = nest.prop[['nest.group']])
-    end_time <- Sys.time()
-    cat(as.character(end_time), "- model estimation ends\n")
+    res <-   E.nl2(process_data = process_data, bw = bw,
+                   param_start = param_start, alts = alts, avi = avi,
+                   nest = nest, choice = "expld.ch", nest_uni = nest_uni,
+                   method = method, param_fixed = param_fixed,
+                   estimator = estimator)
 
   }
 
-  # goodness of fit and return it -------------------------------------------
-
-  res <- L.gof(res = res, Nalt = Nalt, Nobs = Nobs,
-               Nparam = length(beta) - length(param_fixed),
-               param_fixed = param_fixed, avi = as.matrix(data[avi]),
-               chid = chid,
-               name = model_name,
-               start_time = start_time, end_time = end_time)
-
+  # re-set the sample size
   res$Sample_Size <- Sample_Size
 
+  # return the estimation results
   return(res)
+
 }

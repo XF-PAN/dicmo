@@ -92,42 +92,76 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   # to get the threshold columns
   threshold <- process_data[[2]]
 
-  # manipulate the utility function
+  # get the data that needs to model estimation
   df <- stats::model.frame(utility, data)
+
+  # get respondents' choice
   y <- df[[1]]
+
+  # get the attributes columns
   x <- as.matrix(df[, -1])
+
+  # get the names of attributes
   name_param <- names(df[, -1])
+
+  # get the number of paramters/attributes to be estimated
   Nparam <- length(name_param)
+
+  # set the initial values of parameters as 0
   beta <- rep(0, Nparam)
+
+  # name the parameters
   names(beta) <- name_param
 
-  # manipulate the threshold function
+  # get the threshold set
   df <- stats::model.frame(threshold, data)
+
+  # get the threshold column
   x_thd <- as.matrix(df[, -1])
+
+  # get the names of thresholds
   name_param <- names(df[, -1])
+
+  # get the number of thresholds
   Nparam_thd <- length(name_param)
+
+  # set the initial values of thresholds
   beta_thd <- seq(1, Nparam_thd)
+
+  # name the threshold parameters
   names(beta_thd) <- name_param
 
-  param_fixed <- c(param_fixed, "thd.0", name_param[length(name_param)])
+  # get all fixed parameters involving the -Inf and Inf thresholds
+  param_fixed <- c("thd.0", name_param[length(name_param)], param_fixed)
+
+  # update the parameter to be estimated by adding the thresholds
   beta <- c(beta, beta_thd)
 
+  # re-set the initial values of certain parameters
   beta[names(param_start)] <- param_start
+
+  # get the chice task id
   chid <- data$obs.id
+
+  # get the length of rating
   Nalt <- length(rate) - 1
+
+  # get the number of observations
   Nobs <- nrow(df) / 2
+
+  # get the column indicating which one minuse which one
   indicator <- rep(c(-1, 1), Nobs)
 
-  # get the model type
+  # get the model type and the name of distributions to be used
   if(type == "ologit"){
 
     fun <- stats::plogis
-    type <- "logit"
+    model_name <- "ordered logit"
 
   } else if(type == "oprobit"){
 
     fun <- stats::pnorm
-    type <- "probit"
+    model_name <- "ordered probit"
 
   } else stop("Undefined model type!")
 
@@ -152,7 +186,7 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   L.gof(res = res, Nalt = Nalt, Nobs = Nobs,
         Nparam = length(beta) - length(param_fixed),
         param_fixed = param_fixed,
-        name = paste("ordered", type, sep = " "),
+        name = model_name,
         flag = "order",
         start_time = start_time, end_time = end_time)
 }

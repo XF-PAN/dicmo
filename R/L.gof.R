@@ -2,15 +2,21 @@ L.gof <- function(res, Nalt, Nobs, Nparam, param_fixed,
                   avi = NULL, chid = NULL, name, flag = "nomial",
                   start_time, end_time){
 
-  if(!is.null(param_fixed)){
+  if(flag == "order"){
+
+    param_fixed_NOthd <- param_fixed[c(-1, -2)]
+    param_fixed <- param_fixed[c(1, 2)]
 
     id_fixed <- which(names(res$estimate) %in% param_fixed)
     hessian_mrx <- res$hessian[-id_fixed, -id_fixed]
     estimate <- res$estimate[-id_fixed]
+
   } else{
 
+    param_fixed_NOthd <- param_fixed
     hessian_mrx <- res$hessian
     estimate <- res$estimate
+
   }
 
   se <- sqrt(diag(solve(-hessian_mrx)))
@@ -20,18 +26,13 @@ L.gof <- function(res, Nalt, Nobs, Nparam, param_fixed,
   if(flag != "order"){
 
     Initial_LL <- - sum(log(rowsum(avi, chid)))
-  } else{
 
-    Initial_LL <- -Nobs * log(Nalt)
-  }
-
+  } else Initial_LL <- -Nobs * log(Nalt)
 
   Rho_squared <- 1 - res$maximum / Initial_LL
   Adj_Rho_squared <- 1 - (res$maximum - Nparam) / Initial_LL
   AIC <- 2 * Nparam - 2 * res$maximum
   BIC <- log(Nobs) * Nparam - 2 * res$maximum
-
-  time_use <-
 
   results <- list(Hessian = hessian_mrx,
                   Estimate = round(estimate, 6),
@@ -50,7 +51,8 @@ L.gof <- function(res, Nalt, Nobs, Nparam, param_fixed,
                   Message = res$message,
                   Name = name,
                   start_time = start_time,
-                  end_time = end_time)
+                  end_time = end_time,
+                  param_fixed = param_fixed_NOthd)
   class(results) <- "dicmo"
 
   return(results)
