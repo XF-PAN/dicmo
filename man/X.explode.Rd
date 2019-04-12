@@ -6,15 +6,16 @@
 \usage{
 X.explode(data, choice, alts, attrs, attr_coding = NULL,
   attr_level = NULL, interact = NULL, type = "logit", nest,
-  nest_uni = TRUE, bw = FALSE, scale = FALSE, avi = NULL,
-  method = "BFGS", estimator = TRUE, param_fixed = NULL,
-  param_start = NULL)
+  nest_uni = TRUE, bw = FALSE, scale = FALSE, rank_alts = FALSE,
+  avi = NULL, method = "BFGS", estimator = TRUE,
+  param_fixed = NULL, param_start = NULL)
 }
 \arguments{
 \item{data}{A tibble, input data, wide format.}
 
 \item{choice}{A vector of character, name of column indicating individuals'
-choices from the most to the worst - the order matters!}
+choices from the most to the worst - the order matters! This argument is
+useless and not necessary if the argument "rank_alts" is TRUE.}
 
 \item{alts}{A vector of characters, names of all alternatives, including
 the none-option if any.}
@@ -59,9 +60,12 @@ same.}
 \item{bw}{A logical, if TRUE, then BWS case 3 is estimated, otherwise the
 complete rank is used. Default = FALSE.}
 
-\item{scale, }{A logical, if TRUE, alternative-specific scale parametes are
+\item{scale}{A logical, if TRUE, alternative-specific scale parametes are
 estimated, otherwise it is fixed to 1. Note only alternative-specific
-scale parameters are allowed. DEfault = FASLE.}
+scale parameters are allowed. Default = FASLE.}
+
+\item{rank_alts}{A logical, if TRUE, the alternatives are ranked otherwise
+the preferences are ranked. Default = FALSE.}
 
 \item{avi}{A character, name of column indicating if an alternative is
 available to individuals. Default = NULL, indicating all alternatives are
