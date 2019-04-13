@@ -148,14 +148,14 @@ X.explode <- function(data, choice, alts, attrs, attr_coding = NULL,
   # model estimation
   if(type == "logit"){
 
-    res <- E.logit(process_data = process_data, bw = bw,
+    res <- E.logit(process_data = process_data, bw = bw, scale = scale,
                    param_start = param_start, alts = alts, avi = avi,
                    method = method, param_fixed = param_fixed,
                    estimator = estimator)
 
   } else if(type == "nl2"){
 
-    res <-   E.nl2(process_data = process_data, bw = bw,
+    res <-   E.nl2(process_data = process_data, bw = bw, scale = scale,
                    param_start = param_start, alts = alts, avi = avi,
                    nest = nest, choice = "expld.ch", nest_uni = nest_uni,
                    method = method, param_fixed = param_fixed,

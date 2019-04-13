@@ -1,4 +1,5 @@
-E.nl2 <- function(process_data, param_start, alts, avi, bw = NULL,
+E.nl2 <- function(process_data, param_start, alts, avi,
+                  bw = NULL, scale = FALSE,
                   nest, choice, nest_uni,
                   method, param_fixed, estimator){
 
@@ -68,22 +69,66 @@ E.nl2 <- function(process_data, param_start, alts, avi, bw = NULL,
 
   # model estimation --------------------------------------------------------
 
-  start_time <- Sys.time()
-  cat(as.character(start_time), "- model estimation starts\n")
-  res <- maxLik::maxLik(logLik = logLik.nl2,
-                        start = beta,
-                        method = method,
-                        fixed = param_fixed,
-                        finalHessian = estimator,
-                        control = list(iterlim = 1000),
-                        attr = x, choice = y, chid = chid,
-                        avi = as.matrix(data[avi]),
-                        nest.alt = nest.prop[['nest.alt']],
-                        nest.choice = nest.prop[['nest.choice']],
-                        nest.id = nest.prop[['nest.id']],
-                        nest.group = nest.prop[['nest.group']])
-  end_time <- Sys.time()
-  cat(as.character(end_time), "- model estimation ends\n")
+  if(!scale){
+
+    start_time <- Sys.time()
+    cat(as.character(start_time), "- model estimation starts\n")
+    res <- maxLik::maxLik(logLik = logLik.nl2,
+                          start = beta,
+                          method = method,
+                          fixed = param_fixed,
+                          finalHessian = estimator,
+                          control = list(iterlim = 1000),
+                          attr = x, choice = y, chid = chid,
+                          avi = as.matrix(data[avi]),
+                          nest.alt = nest.prop[['nest.alt']],
+                          nest.choice = nest.prop[['nest.choice']],
+                          nest.id = nest.prop[['nest.id']],
+                          nest.group = nest.prop[['nest.group']])
+    end_time <- Sys.time()
+    cat(as.character(end_time), "- model estimation ends\n")
+
+  } else{
+
+    if(bw){
+
+      beta_scale <- c(scale.worst = 1)
+      beta <- c(beta, beta_scale)
+
+      scale_col <- sort(rep(c("scale.best", "scale.worst"), nrow(x) / 2))
+
+    } else{
+
+      Nscale <- length(alts) - 2
+      beta_scale <- rep(1, Nscale)
+      names(beta_scale) <- stringr::str_c("scale", 2:(Nscale + 1), sep = ".")
+      beta <- c(beta, beta_scale)
+
+      scale.last <- stringr::str_c("scale", Nscale + 2, sep = ".")
+      scale_col <- sort(rep(c("scale.1", names(beta_scale), scale.last),
+                            nrow(x) / length(alts)))
+
+    }
+
+    start_time <- Sys.time()
+    cat(as.character(start_time), "- model estimation starts\n")
+    res <- maxLik::maxLik(logLik = logLik.nl2.scale,
+                          start = beta,
+                          method = method,
+                          fixed = param_fixed,
+                          finalHessian = estimator,
+                          control = list(iterlim = 1000),
+                          attr = x, choice = y, chid = chid,
+                          Nparam = Nparam, scale_col = scale_col,
+                          avi = as.matrix(data[avi]),
+                          nest.alt = nest.prop[['nest.alt']],
+                          nest.choice = nest.prop[['nest.choice']],
+                          nest.id = nest.prop[['nest.id']],
+                          nest.group = nest.prop[['nest.group']])
+    end_time <- Sys.time()
+    cat(as.character(end_time), "- model estimation ends\n")
+
+  }
 
   # goodness of fit and return it -------------------------------------------
 
