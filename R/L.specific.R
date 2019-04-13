@@ -30,6 +30,7 @@ L.specific <- function(data, attrs, attr_coding, attr_level, alts, flag = NULL){
     if(Nasc_0 == 0 & Nasc != 1){
 
       stop("Can not find the based alternative!")
+
     }
 
     # If there is value 0 in asc (maybe more than 1 value 0) and there are more
@@ -61,6 +62,7 @@ L.specific <- function(data, attrs, attr_coding, attr_level, alts, flag = NULL){
 
           # combined the coded data to the existed specific data part
           data_specific <- dplyr::bind_cols(data_specific, data_asc)
+
         }
       }
     }
@@ -115,6 +117,7 @@ L.specific <- function(data, attrs, attr_coding, attr_level, alts, flag = NULL){
 
             # combined the coded data to the existed specific data part
             data_specific <- dplyr::bind_cols(data_specific, data_attr)
+
           }
         }
 
@@ -139,6 +142,7 @@ L.specific <- function(data, attrs, attr_coding, attr_level, alts, flag = NULL){
 
           # combined the coded data to the existed specific data part
           data_specific <- dplyr::bind_cols(data_specific, data_attr)
+
         }
       }
     }
@@ -162,7 +166,8 @@ L.specific <- function(data, attrs, attr_coding, attr_level, alts, flag = NULL){
 
         if(flag != "order"){
 
-          stop("Impossible to estimate a genetric parameter of context variables!")
+          stop("Impossible to estimate a genetric parameter
+               for context variables!")
         }
       }
 
@@ -202,6 +207,7 @@ L.specific <- function(data, attrs, attr_coding, attr_level, alts, flag = NULL){
 
               # combined the coded data to the existed specific data part
               data_specific <- dplyr::bind_cols(data_specific, data_context)
+
             }
           }
 
@@ -228,6 +234,7 @@ L.specific <- function(data, attrs, attr_coding, attr_level, alts, flag = NULL){
 
             # combined the coded data to the existed specific data part
             data_specific <- dplyr::bind_cols(data_specific, data_context)
+
           }
         }
       }
@@ -236,4 +243,5 @@ L.specific <- function(data, attrs, attr_coding, attr_level, alts, flag = NULL){
 
   # Return the the specified data set.
   return(dplyr::select(data_specific, -alt.name))
+
 }

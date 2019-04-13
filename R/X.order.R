@@ -137,9 +137,6 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   # update the parameter to be estimated by adding the thresholds
   beta <- c(beta, beta_thd)
 
-  # re-set the initial values of certain parameters
-  beta[names(param_start)] <- param_start
-
   # get the chice task id
   chid <- data$obs.id
 
@@ -167,6 +164,9 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
 
   # model estimation --------------------------------------------------------
 
+  # re-set the initial values of certain parameters
+  beta[names(param_start)] <- param_start
+
   start_time <- Sys.time()
   cat(as.character(start_time), "- model estimation starts\n")
   res <- maxLik::maxLik(logLik = logLik.order,
@@ -189,4 +189,5 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
         name = model_name,
         flag = "order",
         start_time = start_time, end_time = end_time)
+
 }

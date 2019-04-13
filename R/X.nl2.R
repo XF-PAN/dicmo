@@ -97,4 +97,5 @@ X.nl2 <- function(data, choice, alts, attrs, nest, nest_uni =TRUE,
         param_start = param_start, alts = alts, avi = avi,
         nest = nest, choice = choice, nest_uni = nest_uni,
         method = method, param_fixed = param_fixed, estimator = estimator)
+
 }

@@ -27,14 +27,16 @@ L.nest <- function(data, nest, choice, nest_uni, Nalt, beta){
 
   # update the 'nest.alt' column and beta according to whether a univeral
   # inclusive value is estimated
-  if(nest_uni == FALSE){
+  if(nest_uni == FALSE){ # for nest-specific iv parameters
 
     iv <- stringr::str_c('iv.', names(nest))
     beta[iv] <- 1
-  } else{
+
+  } else{ # for a generic iv parameter
 
     data$'nest.alt'[data$alt.name %in% unlist(nest)] <- 'iv'
     beta['iv'] <- 1
+
   }
 
   # update the nest id by adding obs.id
@@ -47,6 +49,7 @@ L.nest <- function(data, nest, choice, nest_uni, Nalt, beta){
   nest.group <- stringr::str_split(nest.id.distinct, pattern = '-',
                                    simplify = TRUE)[, 1]
 
+  # summary the nest property that would be used in the log-likelihood function
   nest.prop <- list(nest.alt = data$nest.alt,
                     nest.choice = nest.choice,
                     nest.id = as.numeric(factor(nest.id)),

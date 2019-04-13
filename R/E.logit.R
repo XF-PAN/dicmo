@@ -52,13 +52,15 @@ E.logit <- function(process_data, param_start, alts, avi,
       # get the model name
       model_name <- "exploded logit (best-worst only)"
 
-    } else model_name <- "exploded logit"
+    } else model_name <- "exploded logit" # get the name of model to be estimated
 
-  } else model_name <- "logit"
+  } else model_name <- "logit" # get the name of model to be estimated
 
   # model estimation --------------------------------------------------------
 
-  if(!scale){
+  # this "if-else" is for the exploded model with scale parameters to be
+  # estimated
+  if(!scale){ # no scale parameters
 
     # re-set the initial values of certain parameters
     beta[names(param_start)] <- param_start
@@ -76,23 +78,37 @@ E.logit <- function(process_data, param_start, alts, avi,
     end_time <- Sys.time()
     cat(as.character(end_time), "- model estimation ends\n")
 
-  } else{
+  } else{ # scale parameters to be estimated
 
-    if(bw){
+    if(bw){ # best-worst scaling is the model to be estimated
 
+      # set the initial scale value for the worst preference
       beta_scale <- c(scale.worst = 1)
+
+      # combine the scale parameter to other parameters
       beta <- c(beta, beta_scale)
 
+      # generate the scale column
       scale_col <- sort(rep(c("scale.best", "scale.worst"), nrow(x) / 2))
 
-    } else{
+    } else{ # the whole ranked preference is the model to be estimated
 
+      # get the number of scale parameters to be estimated
       Nscale <- length(alts) - 2
+
+      # set the initial values of scale parameters
       beta_scale <- rep(1, Nscale)
+
+      # get the name of scale parameters
       names(beta_scale) <- stringr::str_c("scale", 2:(Nscale + 1), sep = ".")
+
+      # combine the scale parameters to other parameters
       beta <- c(beta, beta_scale)
 
+      # creat the name of the scale of worst-preference
       scale.last <- stringr::str_c("scale", Nscale + 2, sep = ".")
+
+      # generate the scale column
       scale_col <- sort(rep(c("scale.1", names(beta_scale), scale.last),
                             nrow(x) / length(alts)))
 
@@ -116,8 +132,6 @@ E.logit <- function(process_data, param_start, alts, avi,
     cat(as.character(end_time), "- model estimation ends\n")
 
   }
-
-
 
   # goodness of fit and return it -------------------------------------------
 

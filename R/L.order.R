@@ -10,12 +10,15 @@ L.order <- function(data, rate, choice){
     if(i == 1){
 
       data <- dplyr::mutate(data, !!thd := log(1 * (data$alt.name != rate[i])))
+
     } else if(i == length(rate)){
 
       data <- dplyr::mutate(data, !!thd := -log(1 * (data$alt.name != rate[i])))
+
     } else{
 
       data <- dplyr::mutate(data, !!thd := 1 * (data$alt.name == rate[i]))
+
     }
   }
 
@@ -33,4 +36,5 @@ L.order <- function(data, rate, choice){
 
   # return the re-formed data set and the threshold function
   return(list(data, threshold))
+
 }

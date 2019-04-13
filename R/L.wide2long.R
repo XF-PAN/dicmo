@@ -58,6 +58,7 @@ L.wide2long <- function(data, choice, alts, avi = NULL){
     data_wide <- dplyr::bind_rows(data_wide,
                                   dplyr::bind_cols(data_generic,
                                                    data_alts_tmp))
+
   }
 
   # Set the NA value in the long-format data set to 0, where the NA is generated
@@ -75,9 +76,11 @@ L.wide2long <- function(data, choice, alts, avi = NULL){
   for(i in 1:length(choice)){
 
     data_wide[choice[i]] <- data_wide[choice[i]] == data_wide["alt.name"]
+
   }
 
 
   # Return the long-format data set.
   return(data_wide)
+
 }

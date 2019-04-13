@@ -18,12 +18,14 @@ L.utility <- function(choice, attrs, attr_coding,
     if(Nattrs !=1 | sum_attrs == 0){
 
       attrs_specific_tmp <- dplyr::select(attrs_specific_tmp, -name_attr)
+
     }
   }
 
   name_attrs_non_specified <- names(attrs_specific_tmp)
 
   model_attr_coding <- NULL
+
   if(length(name_attrs_non_specified) != 0){
 
     for(j in 1:length(name_attrs_non_specified)){
@@ -34,12 +36,15 @@ L.utility <- function(choice, attrs, attr_coding,
           name_non_specific[stringr::str_detect(
             name_non_specific,
             stringr::str_c(name_attrs_non_specified[j], "."))]
+
       } else{
 
         model_attr_coding_tmp <- name_attrs_non_specified[j]
+
       }
 
       model_attr_coding <- c(model_attr_coding, model_attr_coding_tmp)
+
     }
   }
 
@@ -48,4 +53,5 @@ L.utility <- function(choice, attrs, attr_coding,
   f_utility <- stats::reformulate(termlabels = formula_x, response = choice)
 
   return(f_utility)
+
 }
