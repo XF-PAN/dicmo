@@ -29,9 +29,6 @@ E.logit <- function(process_data, param_start, alts, avi,
   # name the parameters
   names(beta) <- name_param
 
-  # re-set the initial values of certain parameters
-  beta[names(param_start)] <- param_start
-
   # get the choice task id
   chid <- data$obs.id
 
@@ -62,6 +59,9 @@ E.logit <- function(process_data, param_start, alts, avi,
   # model estimation --------------------------------------------------------
 
   if(!scale){
+
+    # re-set the initial values of certain parameters
+    beta[names(param_start)] <- param_start
 
     start_time <- Sys.time()
     cat(as.character(start_time), "- model estimation starts\n")
@@ -97,6 +97,9 @@ E.logit <- function(process_data, param_start, alts, avi,
                             nrow(x) / length(alts)))
 
     }
+
+    # re-set the initial values of certain parameters
+    beta[names(param_start)] <- param_start
 
     start_time <- Sys.time()
     cat(as.character(start_time), "- model estimation starts\n")

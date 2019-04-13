@@ -46,9 +46,6 @@ E.nl2 <- function(process_data, param_start, alts, avi,
   # get the updated parameters with iv parameters
   beta <- nest.prop[['beta']]
 
-  # re-set the initial values of certain parameters
-  beta[names(param_start)] <- param_start
-
   # update the 'avi' argument
   if(is.null(avi)) avi <- "alt.avi"
 
@@ -70,6 +67,9 @@ E.nl2 <- function(process_data, param_start, alts, avi,
   # model estimation --------------------------------------------------------
 
   if(!scale){
+
+    # re-set the initial values of certain parameters
+    beta[names(param_start)] <- param_start
 
     start_time <- Sys.time()
     cat(as.character(start_time), "- model estimation starts\n")
@@ -109,6 +109,9 @@ E.nl2 <- function(process_data, param_start, alts, avi,
                             nrow(x) / length(alts)))
 
     }
+
+    # re-set the initial values of certain parameters
+    beta[names(param_start)] <- param_start
 
     start_time <- Sys.time()
     cat(as.character(start_time), "- model estimation starts\n")

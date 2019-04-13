@@ -2,7 +2,7 @@ Package: dicmo
 Type: Package
 Title: Discrete Choice Modeling
 Version: 0.1.0
-Date: 2019-04-12
+Date: 2019-04-13
 Author: X.PAN
 Maintainer: X.PAN <ixavier@aliyun.com>
 Description: Estimation of various discrete choice models. For dicmo 0.1.0,
