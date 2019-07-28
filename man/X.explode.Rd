@@ -47,8 +47,8 @@ relevent when argument "attr_coding" is not NULL. Default = NULL.}
 \item{interact}{A vector of character, name of attributes' interaction,
 connected by "*". Default = NULL.}
 
-\item{type}{A character, indicating which type of ordered model is used,
-either "logit" or "nl2". Default = "logit".}
+\item{type}{A character, indicating which type of model is used, either
+"logit" or "nl2". Default = "logit".}
 
 \item{nest}{A list, indicating how many nests at all and which alternatives
 are in the same nest.}

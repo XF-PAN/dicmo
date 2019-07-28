@@ -1,6 +1,6 @@
 L.gof <- function(res, Nalt, Nobs, Nparam, param_fixed,
                   avi = NULL, chid = NULL, name, flag = "nomial",
-                  start_time, end_time){
+                  start_time, end_time, estimator){
 
   if(flag == "order"){ # for ordered choice
 
@@ -62,6 +62,19 @@ L.gof <- function(res, Nalt, Nobs, Nparam, param_fixed,
   # compute BIC index
   BIC <- log(Nobs) * Nparam - 2 * res$maximum
 
+  # set the name of estimator
+  if(estimator == TRUE){
+
+    estimator = "with numeric Hessian matrix"
+
+  }
+
+  if(toupper(estimator) == "BHHH"){
+
+    estimator = "with BHHH estimator"
+
+  }
+
   # summary the resulsts and gof
   results <- list(Hessian = hessian_mrx,
                   Estimate = round(estimate, 6),
@@ -81,7 +94,8 @@ L.gof <- function(res, Nalt, Nobs, Nparam, param_fixed,
                   Name = name,
                   start_time = start_time,
                   end_time = end_time,
-                  param_fixed = param_fixed_NOthd)
+                  param_fixed = param_fixed_NOthd,
+                  estimator = estimator)
 
   # set class of the results
   class(results) <- "dicmo"

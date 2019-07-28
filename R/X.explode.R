@@ -48,8 +48,8 @@
 #' @param interact A vector of character, name of attributes' interaction,
 #'     connected by "*". Default = NULL.
 #'
-#' @param type A character, indicating which type of ordered model is used,
-#'     either "logit" or "nl2". Default = "logit".
+#' @param type A character, indicating which type of model is used, either
+#'     "logit" or "nl2". Default = "logit".
 #'
 #' @param nest A list, indicating how many nests at all and which alternatives
 #'     are in the same nest.

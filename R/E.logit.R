@@ -140,6 +140,6 @@ E.logit <- function(process_data, param_start, alts, avi,
         param_fixed = param_fixed, avi = as.matrix(data[avi]),
         chid = chid,
         name = model_name,
-        start_time = start_time, end_time = end_time)
+        start_time = start_time, end_time = end_time, estimator = estimator)
 
 }

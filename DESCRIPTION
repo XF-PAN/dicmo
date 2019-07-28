@@ -2,7 +2,7 @@ Package: dicmo
 Type: Package
 Title: Discrete Choice Modeling
 Version: 0.1.0
-Date: 2019-04-26
+Date: 2019-07-28
 Author: X.PAN
 Maintainer: X.PAN <ixavier@aliyun.com>
 Description: Estimation of various discrete choice models. For dicmo 0.1.0,
@@ -16,8 +16,8 @@ Depends:
     stats (>= 3.6.0)
 RoxygenNote: 6.1.1
 Imports:
-    maxLik (>= 1.3-4),
+    maxLik (>= 1.3-6),
     stringr (>= 1.4.0),
-    dplyr (>= 0.8.0.1),
-    tibble (>= 2.1.1),
-    rlang (>= 0.3.4)
+    dplyr (>= 0.8.3),
+    tibble (>= 2.1.3),
+    rlang (>= 0.4.0)

@@ -188,6 +188,6 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
         param_fixed = param_fixed,
         name = model_name,
         flag = "order",
-        start_time = start_time, end_time = end_time)
+        start_time = start_time, end_time = end_time, estimator = estimator)
 
 }
