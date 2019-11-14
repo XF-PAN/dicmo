@@ -68,7 +68,7 @@ L.wide2long <- function(data, choice, alts, avi = NULL){
 
   # Arrange the sequence of rows first based on the "obs.id" column then
   # "alt.name" column.
-  data_wide <- dplyr::arrange(data_wide, obs.id, alt.name)
+  data_wide <- dplyr::arrange(data_wide, obs.id, match(alt.name, alts))
 
   # Re-set the "alt.name" columne as logic values to indicate if the
   # alternative is chosen.
