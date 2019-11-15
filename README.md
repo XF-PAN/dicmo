@@ -32,8 +32,6 @@ updated at 2019-11-14
   devtools::install_github("xf-pan/dicmo")  
   library(dicmo)  
   
-* the package source and Windows binary can be found in: https://xf-pan.github.io/dicmo/  
-  
 ## Attentions  
 There are some rules have to be followed:  
 * The input data should be a tibble with a wide format.
