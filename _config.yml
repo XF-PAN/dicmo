@@ -1,0 +1,9 @@
+<<<<<<< HEAD
+theme: jekyll-theme-slate
+title: [dicmo]
+description: [Package for R to estimate discrete choice models]
+show_downloads: ["true"]
+
+=======
+theme: jekyll-theme-cayman
+>>>>>>> ff189e63d543f07a6a67f870ad43e61ccfb1adcf
