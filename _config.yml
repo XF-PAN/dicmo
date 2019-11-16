@@ -1,5 +1,4 @@
 theme: jekyll-theme-slate
-title: dicmo | R package
+title: dicmo
 description: an easy way to implement discrete choice modeling
 show_downloads: ["true"]
-keyword: "discrete choice, behavior, logit"
