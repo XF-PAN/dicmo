@@ -1,6 +1,6 @@
 theme: jekyll-theme-slate
 title: dicmo
 SEOTitle: dicmo
-description: "a github page about discrete choice modeling"
+description: an easy way to implement discrete choice modeling
 show_downloads: ["true"]
 keyword: "discrete choice, behavior, logit"
