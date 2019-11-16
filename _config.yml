@@ -1,5 +1,6 @@
 theme: jekyll-theme-slate
-title: [dicmo]
-description: [Package for R to estimate discrete choice models]
+title: dicmo
+SEOTitle: dicmo
+description: "a github page about discrete choice modeling"
 show_downloads: ["true"]
-
+keyword: "discrete choice, behavior, logit"
