@@ -4,11 +4,26 @@
 \alias{X.explode}
 \title{function to estimate exploded logit/probit model, including BWS case 3}
 \usage{
-X.explode(data, choice, alts, attrs, attr_coding = NULL,
-  attr_level = NULL, interact = NULL, type = "logit", nest,
-  nest_uni = TRUE, bw = FALSE, scale = FALSE, rank_alts = FALSE,
-  avi = NULL, method = "BFGS", estimator = TRUE,
-  param_fixed = NULL, param_start = NULL)
+X.explode(
+  data,
+  choice,
+  alts,
+  attrs,
+  attr_coding = NULL,
+  attr_level = NULL,
+  interact = NULL,
+  type = "logit",
+  nest,
+  nest_uni = TRUE,
+  bw = FALSE,
+  scale = FALSE,
+  rank_alts = FALSE,
+  avi = NULL,
+  method = "BFGS",
+  estimator = TRUE,
+  param_fixed = NULL,
+  param_start = NULL
+)
 }
 \arguments{
 \item{data}{A tibble, input data, wide format.}

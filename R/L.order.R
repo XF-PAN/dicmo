@@ -22,14 +22,6 @@ L.order <- function(data, rate, choice){
     }
   }
 
-  # select the row numbers that respondents choose and the row below
-  row_part1 <- which(data[choice] == TRUE)
-  row_part2 <- row_part1 + 1
-  row_used <- sort(c(row_part1, row_part2))
-
-  # get the rows according to the row numbers
-  data <- data[row_used, ]
-
   # generate the threshold function
   threshold <- names(data)[stringr::str_detect(names(data), "thd.")]
   threshold <- stats::reformulate(termlabels = threshold, response = choice)

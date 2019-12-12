@@ -1,15 +1,15 @@
-L.gof <- function(res, Nalt, Nobs, Nparam, param_fixed,
+L.gof <- function(res, Nalt, Nobs, Nparam, param_fixed, param_fixed_all = NULL,
                   avi = NULL, chid = NULL, name, flag = "nomial",
                   start_time, end_time, estimator){
 
   if(flag == "order"){ # for ordered choice
 
     # get the fixed parameters set by the userers
-    param_fixed_NOthd <- param_fixed[c(-1, -2)]
+    param_fixed_NOthd <- param_fixed
 
     # get the first and last thresholds, which are -Inf and Inf, respectively -
     # they are fixed during the estimation
-    param_fixed <- param_fixed[c(1, 2)]
+    param_fixed <- param_fixed_all[!(param_fixed_all %in% param_fixed)]
 
     # get the position of fixed thresholds
     id_fixed <- which(names(res$estimate) %in% param_fixed)

@@ -132,22 +132,29 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   names(beta_thd) <- name_param
 
   # get all fixed parameters involving the -Inf and Inf thresholds
-  param_fixed <- c("thd.0", name_param[length(name_param)], param_fixed)
+
+  param_fixed_all <- c("thd.0", name_param[length(name_param)], param_fixed,
+                       names(beta)[stringr::str_detect(names(beta), "pos.inf")])
 
   # update the parameter to be estimated by adding the thresholds
   beta <- c(beta, beta_thd)
 
+  beta["thd.0"] <- 1
+  beta[name_param[length(name_param)]] <- 1
+
   # get the chice task id
-  chid <- data$obs.id
+  chid <- data$obs.id[-seq(6, nrow(df), length(rate))]
+
+  chid_inf <- data$obs.id
 
   # get the length of rating
   Nalt <- length(rate) - 1
 
   # get the number of observations
-  Nobs <- nrow(df) / 2
+  Nobs <- nrow(df) / length(rate)
 
   # get the column indicating which one minuse which one
-  indicator <- rep(c(-1, 1), Nobs)
+  indicator <- df[ ,1][-seq(6, nrow(df), length(rate))]# rep(c(-1, 1), Nobs) # ????
 
   # get the model type and the name of distributions to be used
   if(type == "ologit"){
@@ -172,11 +179,11 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   res <- maxLik::maxLik(logLik = logLik.order,
                         start = beta,
                         method = method,
-                        fixed = param_fixed,
+                        fixed = param_fixed_all,
                         finalHessian = estimator,
-                        control = list(iterlim = 1000),
+                        control = list(printLevel = 1, iterlim = 1000),
                         attr = x, attr_thd = x_thd, choice = indicator,
-                        chid = chid, fun = fun,
+                        chid_inf = chid_inf, chid = chid, fun = fun,
                         Nparam = Nparam, Nparam_all = length(beta))
   end_time <- Sys.time()
   cat(as.character(end_time), "- model estimation ends\n")
@@ -184,8 +191,9 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   # goodness of fit and return it -------------------------------------------
 
   L.gof(res = res, Nalt = Nalt, Nobs = Nobs,
-        Nparam = length(beta) - length(param_fixed),
+        Nparam = length(beta) - length(param_fixed_all),
         param_fixed = param_fixed,
+        param_fixed_all = param_fixed_all,
         name = model_name,
         flag = "order",
         start_time = start_time, end_time = end_time, estimator = estimator)

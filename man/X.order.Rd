@@ -4,10 +4,20 @@
 \alias{X.order}
 \title{function to estimate ordered choice model}
 \usage{
-X.order(data, choice, rate, attrs, attr_coding = NULL,
-  attr_level = NULL, interact = NULL, type = "ologit",
-  method = "BFGS", estimator = TRUE, param_fixed = NULL,
-  param_start = NULL)
+X.order(
+  data,
+  choice,
+  rate,
+  attrs,
+  attr_coding = NULL,
+  attr_level = NULL,
+  interact = NULL,
+  type = "ologit",
+  method = "BFGS",
+  estimator = TRUE,
+  param_fixed = NULL,
+  param_start = NULL
+)
 }
 \arguments{
 \item{data}{A tibble, input data.}
