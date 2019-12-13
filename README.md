@@ -1,4 +1,4 @@
-updated at 2019-11-14 
+updated at 2019-12-13 
 
 ## What is dicmo?
 *dicmo* is an R package for estimating various discrete choice models. In addition, it provides some useful functions to manipulate data before estimating the model. The current version of *dicmo* is 0.1.0.
