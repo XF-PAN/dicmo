@@ -6,7 +6,7 @@ L.data <- function(data, choice, alts, attrs, attr_coding,
   if(flag == "order"){
 
     attrs_alts <- attrs[["attrs_alts"]]
-    attrs_alts <- rbind(0, attrs_alts, 214)
+    attrs_alts <- rbind(0, attrs_alts, 0)
 
     attrs[["attrs_alts"]] <- attrs_alts
 

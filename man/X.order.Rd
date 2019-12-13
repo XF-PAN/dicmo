@@ -2,7 +2,7 @@
 % Please edit documentation in R/X.order.R
 \name{X.order}
 \alias{X.order}
-\title{function to estimate ordered choice model}
+\title{function to estimate generalized ordered choice model}
 \usage{
 X.order(
   data,
@@ -27,21 +27,15 @@ X.order(
 \item{rate}{A vector of characters, the scale that used ot rate an
 alternative.}
 
-\item{attrs}{A list contains three slices, whose elements have to be non-
-negative integers. The first one is a tibble, named "attrs_alts",
-indicating the alternative-specific attributes (excluding ASCs); the
-second one, named "asc", is a vector indicating the ASCs, and the third
-one, named "context", is a tibble indicating the context variables
-(includig individuals' socio-demographics). The column names in all
-tibbles represent the name of attributes, or context variables. All have
-same numbers of rows (elements) with the length of argument "alts". The
-element in tibbles/vector indicates if the attribute, constant or
-context variable is alternative-specific: "0" means the attribute,
-constaant or context variable is not available for the alternative
-(based on the sequence of alternative in the argument "alts"); except
-"0", if some elements in one column have a same value, then the
-corresponding alternatives have generic parameter in terms of this
-attribute, constant or context variable.}
+\item{attrs}{A list contains only one slice, whose elements have to be positive
+integers. The only one slice is a tibble, named "attrs_alts",
+indicating the all attributes (including context variables). The column
+names in the tibbles represent the name of attributes. All have
+same numbers of rows (elements) with the length of argument "rate" minus
+one. The element in the tibble indicates if the attribute is
+alternative-specific: if some elements in one column have a same value,
+then the corresponding segments share a generic parameter in terms of this
+attribute.}
 
 \item{attr_coding}{A vector of character, names of categorical attributes.
 Default = NULL, which means all attributes are continuous.}

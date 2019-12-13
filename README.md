@@ -21,8 +21,8 @@ updated at 2019-11-14
   * allow to fix the values of certain estimated parameters 
   * report various goodness of fit, i.e. initial log-likelihood, convergent log-likelihood, AIC, BIC, Rho-squared, and adjusted Rho-squared
 * 2-level nested logit model estimation using maximum likelihood approach
-* ordered logit/probit model estimation using maximum likelihood approach
-* exploded (2-level) nested logit model, including best-worst scaling case 3 
+* generalized ordered logit/probit model estimation using maximum likelihood approach
+* exploded (2-level nested) logit model, including best-worst scaling case 3 
 
 ## How to install dicmo?
 * first make sure the *devtools* package is installed and loaded:  
