@@ -12,7 +12,7 @@ X.order(
   attr_coding = NULL,
   attr_level = NULL,
   interact = NULL,
-  type = "ologit",
+  type = "gologit",
   method = "BFGS",
   estimator = TRUE,
   param_fixed = NULL,
@@ -55,7 +55,7 @@ relevent when argument "attr_coding" is not NULL. Default = NULL.}
 connected by "*". Default = NULL.}
 
 \item{type}{A character, indicating which type of ordered model is used,
-either "ologit" or "oprobit". Default = "ologit".}
+either "gologit" or "goprobit". Default = "gologit".}
 
 \item{method}{A character, passed to the function maxLik() in "maxLik"
 package. It indicates the method used in maximum likelihood estimation.

@@ -43,7 +43,7 @@
 #'     connected by "*". Default = NULL.
 #'
 #' @param type A character, indicating which type of ordered model is used,
-#'     either "ologit" or "oprobit". Default = "ologit".
+#'     either "gologit" or "goprobit". Default = "gologit".
 #'
 #' @param method A character, passed to the function maxLik() in "maxLik"
 #'     package. It indicates the method used in maximum likelihood estimation.
@@ -62,7 +62,7 @@
 #'
 
 X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
-                    attr_level = NULL, interact = NULL, type = "ologit",
+                    attr_level = NULL, interact = NULL, type = "gologit",
                     method = "BFGS", estimator = TRUE,
                     param_fixed = NULL, param_start = NULL){
 
@@ -157,15 +157,15 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   indicator <- df[ ,1][-seq(6, nrow(df), length(rate))]# rep(c(-1, 1), Nobs) # ????
 
   # get the model type and the name of distributions to be used
-  if(type == "ologit"){
+  if(type == "gologit"){
 
     fun <- stats::plogis
-    model_name <- "ordered logit"
+    model_name <- "generalized ordered logit"
 
-  } else if(type == "oprobit"){
+  } else if(type == "goprobit"){
 
     fun <- stats::pnorm
-    model_name <- "ordered probit"
+    model_name <- "generalized ordered probit"
 
   } else stop("Undefined model type!")
 
