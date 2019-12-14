@@ -136,19 +136,16 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   beta["thd.0"] <- 1
   beta[name_param[length(name_param)]] <- 1
 
-  # get the chice task id
-  chid <- data$obs.id[-seq(6, nrow(df), length(rate))]
-
-  chid_inf <- data$obs.id
-
   # get the length of rating
   Nalt <- length(rate) - 1
 
   # get the number of observations
   Nobs <- nrow(df) / length(rate)
 
-  # get the column indicating which one minuse which one
-  indicator <- df[ ,1][-seq(6, nrow(df), length(rate))]# rep(c(-1, 1), Nobs) # ????
+  # get the post and previous choice
+  choice_pre <- df[ ,1]
+  choice_post <- dplyr::lag(choice_pre)
+  choice_post[1] <- FALSE
 
   # get the model type and the name of distributions to be used
   if(type == "gologit"){
@@ -175,9 +172,10 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
                         method = method,
                         fixed = param_fixed_all,
                         finalHessian = estimator,
-                        control = list(printLevel = 1, iterlim = 1000),
-                        attr = x, attr_thd = x_thd, choice = indicator,
-                        chid_inf = chid_inf, chid = chid, fun = fun,
+                        control = list(iterlim = 1000),
+                        attr = x, attr_thd = x_thd,
+                        choice_pre = choice_pre, choice_post = choice_post,
+                        chid = data$obs.id, fun = fun,
                         Nparam = Nparam, Nparam_all = length(beta))
   end_time <- Sys.time()
   cat(as.character(end_time), "- model estimation ends\n")
