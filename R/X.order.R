@@ -62,6 +62,22 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
 
   # data preparation --------------------------------------------------------
 
+  # change the column of choice to character
+  data <- dplyr::mutate_at(data, .vars = dplyr::vars(choice), .funs = as.character)
+
+  # change the column of choice to ordered factor
+  data <- dplyr::mutate_at(data, .vars = dplyr::vars(choice),
+                           .funs = ~factor(., levels = rate, ordered = TRUE))
+
+  # change the column of choice to numeric starting with 1
+  data <- dplyr::mutate_at(data, .vars = dplyr::vars(choice), .funs = as.numeric)
+
+  # change the start number to 0
+  data[choice] <- data[choice] - 1
+
+  # update the argument "rate", which starts with 0
+  rate <- as.character(0:(length(rate) - 1))
+
   # to add an extra row for each choice task
   rate <- c(rate, "pos.inf")
 
