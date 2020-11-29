@@ -31,7 +31,7 @@
 #' @param attr_level A list of vector of character, representing the levels of
 #'     all categorical attributes. The first element of a vector is set as base
 #'     level, others are set as 1, 2, 3...in sequence. This argument is only
-#'     relevent when argument "attr_coding" is not NULL. Default = NULL.
+#'     relevant when argument "attr_coding" is not NULL. Default = NULL.
 #'
 #' @param interact A vector of character, name of attributes' interaction,
 #'     connected by "*". Default = NULL.
@@ -90,7 +90,7 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   # get the data set
   data <- process_data[[1]]
 
-  # get the utiity formula
+  # get the utility formula
   utility <- process_data[[2]]
 
   # thresholds setting

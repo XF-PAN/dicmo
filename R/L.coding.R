@@ -5,7 +5,7 @@ L.coding <- function(data, attr_coding, attr_level){
                         ncol = (length(attr_level) - 1))
 
   # Convert the matrix to a tibble.
-  data_coding <- dplyr::as_tibble(data_coding)
+  data_coding <- dplyr::as_tibble(data_coding, .name_repair = "minimal")
 
   # Get the column names of the tibble.
   names(data_coding) <- stringr::str_c(names(attr_coding),

@@ -43,7 +43,7 @@ Default = NULL, which means all attributes are continuous.}
 \item{attr_level}{A list of vector of character, representing the levels of
 all categorical attributes. The first element of a vector is set as base
 level, others are set as 1, 2, 3...in sequence. This argument is only
-relevent when argument "attr_coding" is not NULL. Default = NULL.}
+relevant when argument "attr_coding" is not NULL. Default = NULL.}
 
 \item{interact}{A vector of character, name of attributes' interaction,
 connected by "*". Default = NULL.}
