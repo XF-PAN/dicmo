@@ -4,8 +4,17 @@
 \alias{X.data}
 \title{function to data manipulation for model estimation}
 \usage{
-X.data(data, choice, alts, attrs, attr_coding = NULL,
-  attr_level = NULL, avi = NULL, interact = NULL, flag = "nomial")
+X.data(
+  data,
+  choice,
+  alts,
+  attrs,
+  attr_coding = NULL,
+  attr_level = NULL,
+  avi = NULL,
+  interact = NULL,
+  flag = "nomial"
+)
 }
 \arguments{
 \item{data}{A tibble, input data, wide format.}

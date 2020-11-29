@@ -6,33 +6,10 @@ L.data <- function(data, choice, alts, attrs, attr_coding,
   if(flag == "order"){
 
     attrs_alts <- attrs[["attrs_alts"]]
-    context <- attrs[["context"]]
-    attrs_alts_tbl <- NULL
-    context_tbl <- NULL
+    attrs_alts <- rbind(0, attrs_alts, 0)
 
-    # deal with alternative-specific attributes
-    for(i in 1:length(attrs_alts)){
+    attrs[["attrs_alts"]] <- attrs_alts
 
-      attrs_name <- attrs_alts[i]
-      attrs_alts_tbl_tmp <- tibble::tibble(!!attrs_name := rep(1, length(alts)))
-
-      attrs_alts_tbl <- dplyr::bind_cols(attrs_alts_tbl, attrs_alts_tbl_tmp)
-    }
-
-    # deal with context variables
-    if(!is.null(context)){
-
-      for(i in 1:length(context)){
-
-        context_name <- context[i]
-        context_tbl_tmp <- tibble::tibble(!!context_name := rep(1, length(alts)))
-
-        context_tbl <- dplyr::bind_cols(context_tbl, context_tbl_tmp)
-      }
-    }
-
-    attrs <- list(attrs_alts = attrs_alts_tbl,
-                  context = context_tbl)
   }
 
   # input data format check -------------------------------------------------

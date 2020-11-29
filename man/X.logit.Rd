@@ -4,9 +4,20 @@
 \alias{X.logit}
 \title{function to estimate multinomial logit model}
 \usage{
-X.logit(data, choice, alts, attrs, attr_coding = NULL,
-  attr_level = NULL, interact = NULL, avi = NULL, method = "BFGS",
-  estimator = TRUE, param_fixed = NULL, param_start = NULL)
+X.logit(
+  data,
+  choice,
+  alts,
+  attrs,
+  attr_coding = NULL,
+  attr_level = NULL,
+  interact = NULL,
+  avi = NULL,
+  method = "BFGS",
+  estimator = TRUE,
+  param_fixed = NULL,
+  param_start = NULL
+)
 }
 \arguments{
 \item{data}{A tibble, input data, wide format.}

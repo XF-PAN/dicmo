@@ -64,11 +64,13 @@ L.wide2long <- function(data, choice, alts, avi = NULL){
   # Set the NA value in the long-format data set to 0, where the NA is generated
   # in the case that some alternative-specific is not available to some certain
   # alternatives.
+  data_wide <- as.data.frame(data_wide)
   data_wide[is.na(data_wide)] <- 0
+  data_wide <- tibble::as_tibble(data_wide)
 
   # Arrange the sequence of rows first based on the "obs.id" column then
   # "alt.name" column.
-  data_wide <- dplyr::arrange(data_wide, obs.id, alt.name)
+  data_wide <- dplyr::arrange(data_wide, obs.id, match(alt.name, alts))
 
   # Re-set the "alt.name" columne as logic values to indicate if the
   # alternative is chosen.

@@ -30,7 +30,7 @@ summary.dicmo <- function(object, ...){
   cat("Model name:", object$Name, "\n")
   cat("Model estimation starts at:", as.character(object$start_time), "\n")
   cat("Model estimation ends at:", as.character(object$end_time), "\n")
-  cat("Model estimation method:", object$Type, "\n")
+  cat("Model estimation method:", object$Type, object$estimator, "\n")
   cat("Model diagnosis:", object$Message, "\n")
   cat("---------------------------------------------------------", "\n")
   cat("Initial log-likelihood:", object$Initial_LL, "\n")

@@ -1,4 +1,4 @@
-#' @title function to estimate ordered choice model
+#' @title function to estimate generalized ordered choice model
 #'
 #' @author X.PAN
 #'
@@ -15,21 +15,15 @@
 #' @param rate A vector of characters, the scale that used ot rate an
 #'     alternative.
 #'
-#' @param attrs A list contains three slices, whose elements have to be non-
-#'     negative integers. The first one is a tibble, named "attrs_alts",
-#'     indicating the alternative-specific attributes (excluding ASCs); the
-#'     second one, named "asc", is a vector indicating the ASCs, and the third
-#'     one, named "context", is a tibble indicating the context variables
-#'     (includig individuals' socio-demographics). The column names in all
-#'     tibbles represent the name of attributes, or context variables. All have
-#'     same numbers of rows (elements) with the length of argument "alts". The
-#'     element in tibbles/vector indicates if the attribute, constant or
-#'     context variable is alternative-specific: "0" means the attribute,
-#'     constaant or context variable is not available for the alternative
-#'     (based on the sequence of alternative in the argument "alts"); except
-#'     "0", if some elements in one column have a same value, then the
-#'     corresponding alternatives have generic parameter in terms of this
-#'     attribute, constant or context variable.
+#' @param attrs A list contains only one slice, whose elements have to be positive
+#'     integers. The only one slice is a tibble, named "attrs_alts",
+#'     indicating the all attributes (including context variables). The column
+#'     names in the tibbles represent the name of attributes. All have
+#'     same numbers of rows (elements) with the length of argument "rate" minus
+#'     one. The element in the tibble indicates if the attribute is
+#'     alternative-specific: if some elements in one column have a same value,
+#'     then the corresponding segments share a generic parameter in terms of this
+#'     attribute.
 #'
 #' @param attr_coding A vector of character, names of categorical attributes.
 #'     Default = NULL, which means all attributes are continuous.
@@ -43,7 +37,7 @@
 #'     connected by "*". Default = NULL.
 #'
 #' @param type A character, indicating which type of ordered model is used,
-#'     either "ologit" or "oprobit". Default = "ologit".
+#'     either "gologit" or "goprobit". Default = "gologit".
 #'
 #' @param method A character, passed to the function maxLik() in "maxLik"
 #'     package. It indicates the method used in maximum likelihood estimation.
@@ -62,11 +56,27 @@
 #'
 
 X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
-                    attr_level = NULL, interact = NULL, type = "ologit",
+                    attr_level = NULL, interact = NULL, type = "gologit",
                     method = "BFGS", estimator = TRUE,
                     param_fixed = NULL, param_start = NULL){
 
   # data preparation --------------------------------------------------------
+
+  # change the column of choice to character
+  data <- dplyr::mutate_at(data, .vars = dplyr::vars(choice), .funs = as.character)
+
+  # change the column of choice to ordered factor
+  data <- dplyr::mutate_at(data, .vars = dplyr::vars(choice),
+                           .funs = ~factor(., levels = rate, ordered = TRUE))
+
+  # change the column of choice to numeric starting with 1
+  data <- dplyr::mutate_at(data, .vars = dplyr::vars(choice), .funs = as.numeric)
+
+  # change the start number to 0
+  data[choice] <- data[choice] - 1
+
+  # update the argument "rate", which starts with 0
+  rate <- as.character(0:(length(rate) - 1))
 
   # to add an extra row for each choice task
   rate <- c(rate, "pos.inf")
@@ -132,33 +142,37 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   names(beta_thd) <- name_param
 
   # get all fixed parameters involving the -Inf and Inf thresholds
-  param_fixed <- c("thd.0", name_param[length(name_param)], param_fixed)
+
+  param_fixed_all <- c("thd.0", name_param[length(name_param)], param_fixed,
+                       names(beta)[stringr::str_detect(names(beta), "pos.inf")])
 
   # update the parameter to be estimated by adding the thresholds
   beta <- c(beta, beta_thd)
 
-  # get the chice task id
-  chid <- data$obs.id
+  beta["thd.0"] <- 1
+  beta[name_param[length(name_param)]] <- 1
 
   # get the length of rating
   Nalt <- length(rate) - 1
 
   # get the number of observations
-  Nobs <- nrow(df) / 2
+  Nobs <- nrow(df) / length(rate)
 
-  # get the column indicating which one minuse which one
-  indicator <- rep(c(-1, 1), Nobs)
+  # get the post and previous choice
+  choice_pre <- df[ ,1]
+  choice_post <- dplyr::lag(choice_pre)
+  choice_post[1] <- FALSE
 
   # get the model type and the name of distributions to be used
-  if(type == "ologit"){
+  if(type == "gologit"){
 
     fun <- stats::plogis
-    model_name <- "ordered logit"
+    model_name <- "generalized ordered logit"
 
-  } else if(type == "oprobit"){
+  } else if(type == "goprobit"){
 
     fun <- stats::pnorm
-    model_name <- "ordered probit"
+    model_name <- "generalized ordered probit"
 
   } else stop("Undefined model type!")
 
@@ -172,11 +186,12 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   res <- maxLik::maxLik(logLik = logLik.order,
                         start = beta,
                         method = method,
-                        fixed = param_fixed,
+                        fixed = param_fixed_all,
                         finalHessian = estimator,
                         control = list(iterlim = 1000),
-                        attr = x, attr_thd = x_thd, choice = indicator,
-                        chid = chid, fun = fun,
+                        attr = x, attr_thd = x_thd,
+                        choice_pre = choice_pre, choice_post = choice_post,
+                        chid = data$obs.id, fun = fun,
                         Nparam = Nparam, Nparam_all = length(beta))
   end_time <- Sys.time()
   cat(as.character(end_time), "- model estimation ends\n")
@@ -184,10 +199,11 @@ X.order <- function(data, choice, rate, attrs, attr_coding = NULL,
   # goodness of fit and return it -------------------------------------------
 
   L.gof(res = res, Nalt = Nalt, Nobs = Nobs,
-        Nparam = length(beta) - length(param_fixed),
+        Nparam = length(beta) - length(param_fixed_all),
         param_fixed = param_fixed,
+        param_fixed_all = param_fixed_all,
         name = model_name,
         flag = "order",
-        start_time = start_time, end_time = end_time)
+        start_time = start_time, end_time = end_time, estimator = estimator)
 
 }

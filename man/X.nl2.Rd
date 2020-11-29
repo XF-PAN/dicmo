@@ -4,10 +4,22 @@
 \alias{X.nl2}
 \title{function to estimate 2-level nested logit model}
 \usage{
-X.nl2(data, choice, alts, attrs, nest, nest_uni = TRUE,
-  attr_coding = NULL, attr_level = NULL, interact = NULL,
-  avi = NULL, method = "BFGS", estimator = TRUE,
-  param_fixed = NULL, param_start = NULL)
+X.nl2(
+  data,
+  choice,
+  alts,
+  attrs,
+  nest,
+  nest_uni = TRUE,
+  attr_coding = NULL,
+  attr_level = NULL,
+  interact = NULL,
+  avi = NULL,
+  method = "BFGS",
+  estimator = TRUE,
+  param_fixed = NULL,
+  param_start = NULL
+)
 }
 \arguments{
 \item{data}{A tibble, input data, wide format.}

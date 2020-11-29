@@ -1,4 +1,4 @@
-updated at 2019-04-10  
+updated at 2019-12-13 
 
 ## What is dicmo?
 *dicmo* is an R package for estimating various discrete choice models. In addition, it provides some useful functions to manipulate data before estimating the model. The current version of *dicmo* is 0.1.0.
@@ -21,8 +21,8 @@ updated at 2019-04-10
   * allow to fix the values of certain estimated parameters 
   * report various goodness of fit, i.e. initial log-likelihood, convergent log-likelihood, AIC, BIC, Rho-squared, and adjusted Rho-squared
 * 2-level nested logit model estimation using maximum likelihood approach
-* ordered logit/probit model estimation using maximum likelihood approach
-* exploded (2-level) nested logit model, including best-worst scaling case 3 
+* generalized ordered logit/probit model estimation using maximum likelihood approach
+* exploded (2-level nested) logit model, including best-worst scaling case 3 
 
 ## How to install dicmo?
 * first make sure the *devtools* package is installed and loaded:  
@@ -32,5 +32,19 @@ updated at 2019-04-10
   devtools::install_github("xf-pan/dicmo")  
   library(dicmo)  
   
-* the package source and Windows binary can be found in: https://xf-pan.github.io/dicmo/  
-  
+## Attentions  
+There are some rules have to be followed:  
+* The input data should be a tibble with a wide format.
+* The column name of the input data could consist of English letters, numbers and underline - others are not accepted - and start with English letters.
+* The name of alternatives could consist of English letters, numbers and under line, and it also could only have numbers as long as the numbers are treated as characters.
+* Names of columns that indicating alternative-specific attributes (including the alternative-available column) should consiste of the names of alternatives and attributes (or the "avi" argument) - they are combined by a colon, for instance, "attribute:alternative" or "alternative:attribute"
+* The artument "attrs" could have no slice "context" and "asc", that means they are all set as 0 - same function to set them as NULL.
+* The order of the slice in the argument "attrs" does not matters.
+* In the argument "attrs", negative number is not allowed.
+* The elemets in the argument "attr_coding" and "attr_level" do not necessary
+have one-to-one correspondence in sequence.
+* Highly recommend to always include the alternative-available column, i.e. the
+"avi" argument.
+* Highly recommend to first estimate the model without setting anything for the argument "interact", "param_start" and "param_fixed" to know the names of estimated parameters, then set these arguments if it is needed.
+* For ordered choice model, the argument "attrs" has no "asc" element.
+* For ordered choice model, the elements in the argument "rate" must be sorted from the worst to the best.
