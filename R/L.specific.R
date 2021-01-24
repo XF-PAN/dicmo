@@ -1,10 +1,10 @@
 L.specific <- function(data, attrs, attr_coding, attr_level, alts, flag = NULL){
 
-  # define the varibal "alt.name", otherwise when chect the package
+  # define the variable "alt.name", otherwise when check the package
   # there would be a NOTE.
   alt.name <- "alt.name"
 
-  # get the firs colume of data to generate a tibble to put the alternative-
+  # get the firs column of data to generate a tibble to put the alternative-
   # specific data part
 
   data_specific <- data[alt.name]

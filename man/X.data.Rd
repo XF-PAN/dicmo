@@ -25,20 +25,24 @@ X.data(
 the none-option if any.}
 
 \item{attrs}{A list contains three slices, whose elements have to be non-
-negative integers. The first one is a tibble, named "attrs_alts",
-indicating the alternative-specific attributes (excluding ASCs); the
-second one, named "asc", is a vector indicating the ASCs, and the third
-one, named "context", is a tibble indicating the context variables
-(includig individuals' socio-demographics). The column names in all
-tibbles represent the name of attributes, or context variables. All have
-same numbers of rows (elements) with the length of argument "alts". The
-element in tibbles/vector indicates if the attribute, constant or
-context variable is alternative-specific: "0" means the attribute,
-constaant or context variable is not available for the alternative
-(based on the sequence of alternative in the argument "alts"); except
-"0", if some elements in one column have a same value, then the
-corresponding alternatives have generic parameter in terms of this
-attribute, constant or context variable.}
+    negative integers. The first one is a tibble, named "attrs_alts",
+    indicating the alternative-specific attributes (excluding ASCs); the
+    second one, named "asc", is a vector indicating the ASCs, and the third
+    one, named "context", is a tibble indicating the context variables
+    (includig individuals' socio-demographics). The column names in all
+    tibbles represent the name of attributes, or context variables. All have
+    same numbers of rows (elements) with the length of argument "alts". The
+    element in tibbles/vector indicates if the attribute, constant or
+    context variable is alternative-specific: "0" means the attribute,
+    constant or context variable is not available for the alternative
+    (based on the sequence of alternative in the argument "alts"); except
+    "0", if some elements in one column have a same value, then the
+    corresponding alternatives have generic parameter in terms of this
+    attribute, constant or context variable.
+
+    In terms of data for ordered choice (i.e., flagy == "order"), there is only
+    one slice, that is "attrs_alts", another two slices "context" and "asc"
+    should not be included.}
 
 \item{attr_coding}{A vector of character, names of categorical attributes.
 Default = NULL, which means all attributes are continuous.}
