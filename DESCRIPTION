@@ -5,7 +5,7 @@ Version: 0.1.1
 Date: 2020-11-30
 Author: X.PAN
 Maintainer: X.PAN <x.pan@whut.edu.cn>
-Description: Estimation of various discrete choice models. For dicmo 0.1.0,
+Description: Estimation of various discrete choice models. For dicmo 0.1.1,
     multinomial logit, nested logit, generalized ordered logit/probit and
     exploded nested/logit model (including BWS multi-profile case) are available.
 License: GPL-3
