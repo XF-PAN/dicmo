@@ -40,7 +40,7 @@ the none-option if any.}
     corresponding alternatives have generic parameter in terms of this
     attribute, constant or context variable.
 
-    In terms of data for ordered choice (i.e., flagy == "order"), there is only
+    In terms of data for ordered choice (i.e., flag == "order"), there is only
     one slice, that is "attrs_alts", another two slices "context" and "asc"
     should not be included.}
 
